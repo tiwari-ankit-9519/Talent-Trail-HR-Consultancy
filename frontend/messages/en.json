@@ -60,14 +60,46 @@
     "leaveApprovals": "Leave approvals",
     "payroll": "Payroll",
     "payslips": "My payslips",
-    "system": "System health"
+    "system": "System health",
+    "people": "People directory",
+    "profile": "My profile",
+    "emails": "Emails and reminders",
+    "import": "Bulk import"
   },
   "login": {
-    "heading": "Sign in",
+    "heading": "Staff sign in",
     "email": "Email",
     "password": "Password",
     "submit": "Sign in",
-    "submitting": "Signing in"
+    "submitting": "Signing in",
+    "subtitle": "For Talent Trail team members. Use the account your administrator created for you.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "backHome": "Back to website",
+    "panel": {
+      "heading": "Run your recruitment from one place",
+      "text": "Clients, candidates, placements, invoices and payroll, together in one workspace for the whole team.",
+      "points": {
+        "1": {
+          "title": "From requirement to joining",
+          "text": "Track every candidate through submission, interview and offer."
+        },
+        "2": {
+          "title": "Invoices and commissions",
+          "text": "Raise invoices on joining day and track payments and recruiter commissions."
+        },
+        "3": {
+          "title": "Secure by design",
+          "text": "Role-based access, an audit trail and encrypted sensitive details."
+        }
+      },
+      "footer": "For Talent Trail HR Solutions staff only."
+    },
+    "candidate": {
+      "title": "Looking for a job?",
+      "text": "Candidates do not need an account. Browse current openings and apply directly.",
+      "action": "View current jobs"
+    }
   },
   "changePassword": {
     "heading": "Change password",
@@ -379,7 +411,18 @@
     "PAYROLL_MONTH_INVALID": "Choose a valid month that is not in the future.",
     "PAYROLL_NO_EMPLOYEES": "No employee has a salary structure for this month yet.",
     "SALARY_STRUCTURE_INVALID": "Check the basic and HRA amounts. Together they cannot be more than the gross.",
-    "PAYSLIP_NOT_FOUND": "That payslip was not found."
+    "PAYSLIP_NOT_FOUND": "That payslip was not found.",
+    "PROFILE_EMPLOYEE_CODE_TAKEN": "Another employee already has this employee code.",
+    "PROFILE_MANAGER_INVALID": "Choose a different reporting manager. An employee cannot report to themselves, and the manager must be active.",
+    "PROFILE_DOCUMENT_INVALID": "The file must be a PDF, PNG, JPG or DOCX and its content must match its type.",
+    "PROFILE_DOCUMENT_NOT_FOUND": "This document could not be found.",
+    "EMAIL_TEMPLATE_NOT_FOUND": "This email template does not exist.",
+    "EMAIL_TEMPLATE_INVALID": "Please check the template: the subject must be one line and only the listed placeholders can be used.",
+    "REMINDER_NOT_FOUND": "This reminder does not exist.",
+    "REMINDER_INVALID": "Enter whole numbers of days between -365 and 365 and valid email addresses.",
+    "PROFILE_DOCUMENT_REVIEW_INVALID": "Only a pending document can be reviewed, and a reason is needed to reject.",
+    "PROFILE_DOCUMENT_LOCKED": "This document is verified and can only be removed by HR.",
+    "IMPORT_TYPE_UNKNOWN": "This kind of import is not available."
   },
   "jobs": {
     "heading": "Jobs",
@@ -489,7 +532,8 @@
     "honeypot": "Leave this field empty",
     "consent": "I agree that Talent Trail HR Solutions may share my profile and resume with its client companies for this and other suitable roles.",
     "submit": "Submit application",
-    "submitting": "Submitting"
+    "submitting": "Submitting",
+    "lead": "Browse our current openings and apply online. Our team will contact you if your profile matches."
   },
   "enums": {
     "jobStatus": {
@@ -662,6 +706,21 @@
     "to": {
       "NotEmpty": "Select at least one recipient.",
       "Email": "Enter a valid email address."
+    },
+    "phone": {
+      "Pattern": "Phone number is not valid. Use digits, spaces, + and - only, 7 to 20 characters."
+    },
+    "emergencyPhone": {
+      "Pattern": "Emergency phone number is not valid. Use digits, spaces, + and - only, 7 to 20 characters."
+    },
+    "pincode": {
+      "Pattern": "PIN code must be 6 digits."
+    },
+    "bankAccountNumber": {
+      "Pattern": "Account number must be 9 to 18 digits."
+    },
+    "uan": {
+      "Pattern": "UAN must be 12 digits."
     }
   },
   "fieldLabels": {
@@ -990,7 +1049,11 @@
     "leave-requests": "Leave approvals",
     "payroll": "Payroll",
     "payslips": "My payslips",
-    "system": "System health"
+    "system": "System health",
+    "people": "People directory",
+    "profile": "My profile",
+    "import": "Bulk import",
+    "emails": "Emails and reminders"
   },
   "reports": {
     "heading": "Reports",
@@ -998,7 +1061,7 @@
     "to": "To",
     "client": "Client",
     "allClients": "All clients",
-    "exportCsv": "Export CSV",
+    "exportCsv": "CSV (.csv)",
     "presets": {
       "month": "This month",
       "quarter": "Last 3 months",
@@ -1011,7 +1074,13 @@
       "revenue": "Revenue",
       "recruiters": "Recruiters",
       "funnel": "Funnel",
-      "replacements": "Replacements"
+      "replacements": "Replacements",
+      "receivables": "Receivables",
+      "tax": "GST and TDS",
+      "commissions": "Commissions",
+      "payroll": "Payroll register",
+      "attendance": "Attendance",
+      "leave": "Leave"
     },
     "joinings": {
       "count": "Joinings",
@@ -1082,6 +1151,121 @@
       "filled": "Replaced",
       "open": "Awaiting replacement",
       "exitRate": "Exit rate"
+    },
+    "export": "Export",
+    "exportExcel": "Excel (.xlsx)",
+    "month": "Month",
+    "payroll": {
+      "title": "Payroll register",
+      "employee": "Employee",
+      "code": "Code",
+      "designation": "Designation",
+      "payableDays": "Payable days",
+      "lop": "Loss of pay days",
+      "earned": "Earned gross",
+      "commission": "Commission",
+      "otherEarnings": "Other earnings",
+      "pf": "PF",
+      "pt": "Professional tax",
+      "tds": "TDS",
+      "otherDeductions": "Other deductions",
+      "net": "Net pay",
+      "accountHolder": "Account holder",
+      "bank": "Bank",
+      "ifsc": "IFSC",
+      "account": "Account number",
+      "pan": "PAN",
+      "noRun": "No payroll has been run for this month.",
+      "finalized": "Finalized",
+      "draft": "Draft",
+      "netTotal": "Total net pay"
+    },
+    "attendance": {
+      "title": "Attendance summary",
+      "employee": "Employee",
+      "present": "Present",
+      "halfDay": "Half days",
+      "absent": "Absent",
+      "late": "Late",
+      "wfh": "Work from home",
+      "leaves": "Leave days",
+      "lop": "Loss of pay",
+      "holidays": "Holidays",
+      "hours": "Hours worked",
+      "payable": "Payable days"
+    },
+    "leave": {
+      "title": "Leave usage",
+      "year": "Year",
+      "employee": "Employee",
+      "approved": "Approved",
+      "pending": "Pending",
+      "remaining": "Remaining",
+      "totalApproved": "Total approved"
+    },
+    "receivables": {
+      "title": "Open invoices",
+      "invoice": "Invoice",
+      "client": "Client",
+      "candidate": "Candidate",
+      "invoiceDate": "Invoice date",
+      "dueDate": "Due date",
+      "total": "Total",
+      "settled": "Settled",
+      "outstanding": "Outstanding",
+      "daysOverdue": "Days overdue",
+      "bucket": "Ageing",
+      "notDue": "Not due",
+      "days1to30": "1 to 30 days",
+      "days31to60": "31 to 60 days",
+      "days61to90": "61 to 90 days",
+      "days90plus": "Over 90 days",
+      "outstandingTotal": "Total outstanding",
+      "overdueTotal": "Total overdue",
+      "over60": "Overdue more than 60 days"
+    },
+    "tax": {
+      "title": "GST and TDS by month",
+      "month": "Month",
+      "total": "Total",
+      "base": "Taxable value",
+      "cgst": "CGST",
+      "sgst": "SGST",
+      "igst": "IGST",
+      "invoiced": "Invoice total",
+      "tdsExpected": "TDS expected",
+      "tdsDeducted": "TDS deducted",
+      "received": "Amount received"
+    },
+    "commissions": {
+      "title": "Commission details",
+      "byRecruiter": "By recruiter",
+      "recruiter": "Recruiter",
+      "candidate": "Candidate",
+      "client": "Client",
+      "job": "Job",
+      "joined": "Joined on",
+      "amount": "Amount",
+      "state": "State",
+      "payableAfter": "Payable after",
+      "invoice": "Invoice",
+      "paidOn": "Paid on",
+      "reference": "Payment reference",
+      "count": "Commissions",
+      "payableNow": "Payable now",
+      "waiting": "Waiting",
+      "paidTotal": "Paid",
+      "statusFilter": "Status",
+      "allStatuses": "All statuses",
+      "pending": "Pending",
+      "states": {
+        "payable": "Payable now",
+        "paid": "Paid",
+        "cancelled": "Cancelled",
+        "amountNotSet": "Amount not set",
+        "periodRunning": "Replacement period running",
+        "invoiceUnpaid": "Invoice not paid"
+      }
     }
   },
   "attendance": {
@@ -1441,6 +1625,392 @@
       "outboxFailures": "Failed events",
       "disk": "Disk space",
       "memory": "Memory"
+    }
+  },
+  "profile": {
+    "heading": "People directory",
+    "mineHeading": "My profile",
+    "search": "Search by name, email, code or designation",
+    "back": "Back to people",
+    "bankComplete": "On file",
+    "bankMissing": "Missing",
+    "expiringCount": "{count} expiring",
+    "contactOnlyHint": "You can update your own contact, address and emergency details. HR maintains the rest.",
+    "columns": {
+      "name": "Employee",
+      "employeeCode": "Code",
+      "designation": "Designation",
+      "joined": "Joined",
+      "manager": "Reports to",
+      "bank": "Bank details",
+      "documents": "Documents"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "bank": "Bank and tax",
+      "documents": "Documents"
+    },
+    "sections": {
+      "employment": "Employment",
+      "personal": "Personal",
+      "address": "Residence",
+      "emergency": "Emergency contact"
+    },
+    "fields": {
+      "employeeCode": "Employee code",
+      "employmentType": "Employment type",
+      "designation": "Designation",
+      "department": "Department",
+      "joiningDate": "Joining date",
+      "manager": "Reports to",
+      "noManager": "No one",
+      "phone": "Phone",
+      "dateOfBirth": "Date of birth",
+      "addressLine": "Address",
+      "city": "City",
+      "state": "State",
+      "pincode": "PIN code",
+      "emergencyName": "Name",
+      "emergencyPhone": "Phone",
+      "emergencyRelation": "Relationship"
+    },
+    "employmentTypes": {
+      "FULL_TIME": "Full time",
+      "PART_TIME": "Part time",
+      "CONTRACT": "Contract",
+      "INTERN": "Intern"
+    },
+    "bank": {
+      "help": "Used for salary payments. Every change is recorded in the audit log and the account number, PAN and UAN are stored encrypted.",
+      "maskedHint": "Only the last four digits are shown. To change these details, ask HR or Finance.",
+      "holder": "Account holder name",
+      "bankName": "Bank name",
+      "account": "Account number",
+      "accountHint": "9 to 18 digits.",
+      "ifsc": "IFSC code",
+      "pan": "PAN",
+      "uan": "UAN",
+      "uanHint": "12 digits."
+    },
+    "documents": {
+      "add": "Add a document",
+      "type": "Type",
+      "title": "Title",
+      "expiresOn": "Expires on",
+      "expiresHint": "Optional. Shown as a warning 30 days before.",
+      "file": "File",
+      "fileHint": "PDF, PNG, JPG or DOCX, up to 10 MB.",
+      "upload": "Upload",
+      "uploading": "Uploading",
+      "none": "No documents yet.",
+      "download": "Download",
+      "deleteConfirm": "Delete the document \"{title}\"? This cannot be undone.",
+      "expired": "Expired",
+      "expiringSoon": "Expiring soon",
+      "types": {
+        "ID_PROOF": "ID proof",
+        "ADDRESS_PROOF": "Address proof",
+        "OFFER_LETTER": "Offer letter",
+        "EDUCATION": "Education certificate",
+        "EXPERIENCE": "Experience letter",
+        "BANK_PROOF": "Bank proof",
+        "OTHER": "Other"
+      },
+      "status": "Status",
+      "review": {
+        "PENDING": "Waiting for HR",
+        "VERIFIED": "Verified",
+        "REJECTED": "Rejected"
+      },
+      "byEmployee": "Uploaded by employee",
+      "verify": "Verify",
+      "reject": "Reject",
+      "rejectTitle": "Reject \"{title}\"",
+      "rejectHelp": "The employee will see your reason and can upload a corrected copy.",
+      "rejectReason": "Reason",
+      "reviewNotice": "Documents you upload are checked by HR. You can remove a document until it is verified."
+    }
+  },
+  "emails": {
+    "heading": "Emails and reminders",
+    "tabs": {
+      "templates": "Templates",
+      "reminders": "Reminders",
+      "history": "History"
+    },
+    "audience": {
+      "CLIENT": "Client",
+      "CANDIDATE": "Candidate",
+      "STAFF": "Staff"
+    },
+    "edited": "Edited",
+    "subject": "Subject",
+    "body": "Message",
+    "placeholders": "Placeholders",
+    "placeholdersHint": "Click a placeholder to insert it into the message. Each one is replaced with real details when the email is sent.",
+    "save": "Save",
+    "saved": "Template saved.",
+    "preview": "Preview",
+    "previewTitle": "Preview with sample details",
+    "sendTest": "Send test to me",
+    "testSent": "Test email sent to",
+    "testFailed": "The test email was not sent:",
+    "saveBeforeTest": "Save your changes to send a test.",
+    "reset": "Reset to default",
+    "confirmReset": "Reset this template to the default wording? Your edits will be lost.",
+    "resetDone": "Template reset to the default.",
+    "remindersIntro": "Reminders are checked every day at 9 AM. Each reminder is sent once for each day count you list. All reminders are off until you turn them on.",
+    "enable": "Send this reminder automatically",
+    "on": "On",
+    "off": "Off",
+    "offsets": "Days",
+    "extraRecipients": "Also send to",
+    "extraRecipientsHint": "Optional, separated by commas. Up to 5 addresses.",
+    "sentTo": "Goes to",
+    "counted": "Counted from",
+    "offsetsInvalid": "Enter whole numbers separated by commas, for example -3, 0, 7.",
+    "reminderSaved": "Reminder saved.",
+    "runNow": "Run reminders now",
+    "runDone": "Reminders sent:",
+    "runNoMail": "Email is not set up on the server, so nothing was sent.",
+    "history": {
+      "sentAt": "Sent",
+      "reminder": "Reminder",
+      "subject": "Subject",
+      "to": "Sent to"
+    },
+    "reminderNames": {
+      "INVOICE_DUE": "Invoice payment",
+      "REPLACEMENT_ENDING": "Replacement period ending",
+      "CONSENT_PENDING": "Consent pending",
+      "DOCUMENT_EXPIRY": "Document expiry"
+    }
+  },
+  "import": {
+    "heading": "Bulk import",
+    "tabs": {
+      "candidates": "Candidates",
+      "clients": "Clients",
+      "employees": "Employees"
+    },
+    "cols": {
+      "fullName": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "currentCompany": "Current company",
+      "currentTitle": "Current title",
+      "totalExperienceYears": "Experience (years)",
+      "currentCtc": "Current CTC",
+      "expectedCtc": "Expected CTC",
+      "noticePeriodDays": "Notice period (days)",
+      "currentLocation": "Current location",
+      "preferredLocation": "Preferred location",
+      "skills": "Skills",
+      "source": "Source",
+      "notes": "Notes",
+      "name": "Client name",
+      "legalName": "Legal name",
+      "industry": "Industry",
+      "website": "Website",
+      "gstin": "GSTIN",
+      "pan": "PAN",
+      "addressLine1": "Address line 1",
+      "addressLine2": "Address line 2",
+      "city": "City",
+      "state": "State",
+      "postalCode": "Postal code",
+      "country": "Country",
+      "contactName": "Contact name",
+      "contactEmail": "Contact email",
+      "contactPhone": "Contact phone",
+      "contactDesignation": "Contact designation",
+      "contactPrimary": "Primary contact (yes or no)",
+      "role": "Role",
+      "employeeCode": "Employee code",
+      "employmentType": "Employment type",
+      "designation": "Designation",
+      "department": "Department",
+      "joiningDate": "Joining date"
+    },
+    "help": {
+      "candidates": "One row per candidate. Source can be LINKEDIN, NAUKRI, APPLY_LINK, REFERRAL or OTHER. Imported candidates start with consent not asked.",
+      "clients": "One row per contact person. Rows with the same client name are combined into one client with several contacts, and the client details are read from its first row.",
+      "employees": "One row per employee. Role must match an existing role name; use a semicolon to give more than one. Employment type can be FULL_TIME, PART_TIME, CONTRACT or INTERN. Dates look like 2026-10-01. A temporary password is generated for each employee."
+    },
+    "required": "Required columns",
+    "step1": "1. Get the template",
+    "step2": "2. Upload your file",
+    "templateExcel": "Excel template",
+    "templateCsv": "CSV template",
+    "file": "File",
+    "fileHint": "Excel (.xlsx) or CSV, up to {max} rows. The column headings must match the template.",
+    "missingColumns": "The file is missing these required columns:",
+    "empty": "The file has no data rows.",
+    "tooMany": "Only the first {max} rows were read. Import the rest in another file.",
+    "previewTitle": "Preview",
+    "resultTitle": "Import result",
+    "total": "Rows",
+    "ready": "Ready",
+    "imported": "Imported",
+    "duplicates": "Duplicates",
+    "errors": "Errors",
+    "skipNote": "Duplicates and rows with errors are skipped. Nothing is imported until you confirm.",
+    "show": "Show",
+    "filters": {
+      "all": "All rows",
+      "ready": "Ready",
+      "imported": "Imported",
+      "duplicates": "Duplicates",
+      "errors": "Errors"
+    },
+    "run": "Import {count} rows",
+    "confirm": "Import {count} rows now?",
+    "cancel": "Start over",
+    "another": "Import another file",
+    "row": "Row",
+    "record": "Record",
+    "status": "Result",
+    "details": "Details",
+    "statuses": {
+      "VALID": "Ready",
+      "IMPORTED": "Imported",
+      "DUPLICATE": "Duplicate",
+      "INVALID": "Error"
+    },
+    "credentialsNote": "Temporary passwords were created. Download them now: they are not shown again. Each employee must change the password at first sign-in.",
+    "tempPassword": "Temporary password"
+  },
+  "landing": {
+    "nav": {
+      "label": "Main",
+      "home": "Home",
+      "about": "About us",
+      "services": "Services",
+      "industries": "Industries",
+      "process": "How it works",
+      "contact": "Contact",
+      "jobs": "Current jobs",
+      "signIn": "Staff sign in",
+      "dashboard": "Dashboard",
+      "menu": "Open menu",
+      "byService": "By service",
+      "byIndustry": "By industry"
+    },
+    "hero": {
+      "label": "Highlights",
+      "badge": "Recruitment partner for growing teams",
+      "hire": "Hire talent",
+      "findJob": "Find a job",
+      "previous": "Previous slide",
+      "next": "Next slide",
+      "slides": {
+        "permanent": {
+          "title": "Permanent hiring, paid only when someone joins",
+          "text": "Tell us the role. We screen, shortlist and arrange interviews. You pay only for the candidate who joins your team."
+        },
+        "contract": {
+          "title": "Contract and temporary staffing without the delay",
+          "text": "Fill short-term and project roles quickly with candidates who are available and ready to start."
+        },
+        "rpo": {
+          "title": "A recruitment team that works as part of yours",
+          "text": "Hand over a steady hiring need and let us run sourcing, screening and scheduling end to end."
+        }
+      },
+      "points": {
+        "1": "Screened and consented candidates only",
+        "2": "Free replacement if a hire leaves early",
+        "3": "Clear, per-hire invoicing"
+      }
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "heading": "Staffing services built around your hiring",
+      "lead": "Pick the model that fits the role, the timeline and the budget.",
+      "permanent": {
+        "title": "Permanent staffing",
+        "text": "Full-time hires for every level. We shortlist, you interview, and you pay when the candidate joins."
+      },
+      "contract": {
+        "title": "Temporary and contract staffing",
+        "text": "Flexible workforce for seasonal peaks, projects and short-term cover, ready on short notice."
+      },
+      "rpo": {
+        "title": "Recruitment process outsourcing",
+        "text": "We act as your in-house recruiting team for high-volume or ongoing hiring, from sourcing to offer."
+      },
+      "executive": {
+        "title": "Executive search",
+        "text": "Confidential search for senior and leadership roles, with direct outreach to the right people."
+      }
+    },
+    "about": {
+      "eyebrow": "Who we are",
+      "heading": "A recruitment partner that is paid for results",
+      "p1": "Talent Trail HR Solutions connects employers with the people they need. We source candidates, screen them, and line up interviews with your team.",
+      "p2": "Our fee is tied to the outcome. We invoice when the candidate joins, and we stand behind every placement with a free replacement period.",
+      "promises": {
+        "pay": {
+          "title": "Pay per hire",
+          "text": "No retainers for permanent roles. The invoice is raised on the day the candidate joins."
+        },
+        "replace": {
+          "title": "Free replacement",
+          "text": "If a placed candidate leaves within the agreed period, we find a replacement at no extra fee."
+        },
+        "consent": {
+          "title": "Consent first",
+          "text": "A candidate's details are shared with a client only after the candidate agrees."
+        }
+      }
+    },
+    "industries": {
+      "manufacturing": "Manufacturing",
+      "retail": "Retail",
+      "ecommerce": "E-commerce",
+      "healthcare": "Healthcare",
+      "it": "Information technology",
+      "bpo": "BPO and customer support",
+      "leadership": "Leadership hiring",
+      "eyebrow": "Industries",
+      "heading": "Hiring across the sectors you run",
+      "lead": "We shortlist for roles across these industries and know what each one looks for."
+    },
+    "process": {
+      "eyebrow": "How it works",
+      "heading": "From brief to joining day",
+      "lead": "A simple, transparent process with updates at every step.",
+      "steps": {
+        "brief": {
+          "title": "Share the requirement",
+          "text": "Tell us the role, skills, budget and timeline."
+        },
+        "shortlist": {
+          "title": "We shortlist",
+          "text": "We search, screen and share profiles of candidates who agreed to be considered."
+        },
+        "interview": {
+          "title": "You interview",
+          "text": "We schedule interviews and keep both sides informed until an offer is made."
+        },
+        "join": {
+          "title": "Candidate joins",
+          "text": "We invoice on the joining day, with a free replacement period for peace of mind."
+        }
+      }
+    },
+    "contact": {
+      "heading": "Ready to hire or looking for your next role?",
+      "lead": "Tell us what you need and we will get back to you. Candidates can browse our current openings and apply online.",
+      "hire": "Email us",
+      "jobs": "See current jobs"
+    },
+    "footer": {
+      "about": "Recruitment and staffing for employers and candidates, paid only when a hire joins.",
+      "quick": "Quick links",
+      "services": "Services",
+      "industries": "Industries",
+      "copyright": "© {year} Talent Trail HR Solutions. All rights reserved."
     }
   }
 }

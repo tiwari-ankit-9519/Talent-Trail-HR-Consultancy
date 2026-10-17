@@ -145,6 +145,20 @@ public final class ErrorCodes {
     public static final String LEAVE_HALF_DAY_RANGE = "LEAVE_HALF_DAY_RANGE";
     public static final String LEAVE_BALANCE_LOW = "LEAVE_BALANCE_LOW";
     public static final String RATE_LIMITED = "RATE_LIMITED";
+    public static final String PROFILE_EMPLOYEE_CODE_TAKEN = "PROFILE_EMPLOYEE_CODE_TAKEN";
+    public static final String PROFILE_MANAGER_INVALID = "PROFILE_MANAGER_INVALID";
+    public static final String PROFILE_DOCUMENT_INVALID = "PROFILE_DOCUMENT_INVALID";
+    public static final String PROFILE_DOCUMENT_NOT_FOUND = "PROFILE_DOCUMENT_NOT_FOUND";
+
+    public static final String EMAIL_TEMPLATE_NOT_FOUND = "EMAIL_TEMPLATE_NOT_FOUND";
+    public static final String EMAIL_TEMPLATE_INVALID = "EMAIL_TEMPLATE_INVALID";
+    public static final String REMINDER_NOT_FOUND = "REMINDER_NOT_FOUND";
+    public static final String REMINDER_INVALID = "REMINDER_INVALID";
+
+    public static final String PROFILE_DOCUMENT_REVIEW_INVALID = "PROFILE_DOCUMENT_REVIEW_INVALID";
+    public static final String PROFILE_DOCUMENT_LOCKED = "PROFILE_DOCUMENT_LOCKED";
+
+    public static final String IMPORT_TYPE_UNKNOWN = "IMPORT_TYPE_UNKNOWN";
 
     private ErrorCodes() {
     }

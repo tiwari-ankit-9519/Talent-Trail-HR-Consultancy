@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import LandingView from "@/components/LandingView";
 
 export default function RootPage() {
-  redirect("/dashboard");
+  return <LandingView />;
 }

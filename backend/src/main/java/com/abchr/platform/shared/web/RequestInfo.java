@@ -16,7 +16,7 @@ public record RequestInfo(String ipAddress, String userAgent, String requestId) 
         }
         HttpServletRequest request = attributes.getRequest();
         return new RequestInfo(
-                request.getRemoteAddr(),
+                ClientIp.of(request),
                 request.getHeader("User-Agent"),
                 ThreadContext.get(RequestIdFilter.MDC_KEY));
     }

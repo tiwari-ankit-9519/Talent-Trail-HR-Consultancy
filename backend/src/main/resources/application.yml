@@ -66,12 +66,7 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
   shutdown: graceful
-  forward-headers-strategy: native
-  tomcat:
-    remoteip:
-      remote-ip-header: X-Forwarded-For
-      protocol-header: X-Forwarded-Proto
-      internal-proxies: "10\\..*|192\\.168\\..*|172\\.(1[6-9]|2\\d|3[01])\\..*|127\\..*"
+  forward-headers-strategy: framework
 
 management:
   health:
@@ -105,11 +100,18 @@ app:
     environment: ${APP_ENV:local}
     http-bodies-enabled: ${HTTP_BODIES_ENABLED:false}
     slow-request-ms: ${SLOW_REQUEST_MS:1000}
+    sql:
+      enabled: ${SQL_LOG_ENABLED:true}
+      params: ${SQL_LOG_PARAMS:true}
+      slow-ms: ${SLOW_QUERY_MS:500}
+      many-queries: ${MANY_QUERIES_THRESHOLD:30}
+      max-value-length: ${SQL_LOG_MAX_VALUE:120}
   commission:
     min-amount: ${COMMISSION_MIN_AMOUNT:2000}
     max-amount: ${COMMISSION_MAX_AMOUNT:5000}
   security:
     jwt-secret: ${JWT_SECRET}
+    field-key: ${FIELD_ENCRYPTION_KEY}
     jwt-access-ttl-minutes: ${JWT_ACCESS_TTL_MINUTES:15}
     jwt-refresh-ttl-days: ${JWT_REFRESH_TTL_DAYS:7}
   auth:
@@ -126,6 +128,8 @@ app:
     base-path: ${STORAGE_BASE_PATH}
   mail:
     from: ${MAIL_FROM}
+  reminders:
+    cron: ${REMINDERS_CRON:0 0 9 * * *}
   monitoring:
     interval-ms: ${MONITOR_INTERVAL_MS:300000}
     alert-emails: ${ALERT_EMAILS:}

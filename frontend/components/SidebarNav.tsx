@@ -20,10 +20,14 @@ import {
   ScrollText,
   Send,
   Settings,
+  Upload,
   UserCheck,
+  IdCard,
+  Mail,
   ShieldCheck,
   UserCog,
   Users,
+  UsersRound,
   type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
@@ -89,7 +93,20 @@ const groups: NavGroup[] = [
     label: "nav.groups.finance",
     items: [
       { href: "/invoices", label: "nav.invoices", icon: FileText, permissions: ["INVOICES_VIEW", "INVOICES_MANAGE"] },
-      { href: "/reports", label: "nav.reports", icon: BarChart3, permissions: ["REPORTS_VIEW"] },
+      {
+        href: "/reports",
+        label: "nav.reports",
+        icon: BarChart3,
+        permissions: [
+          "REPORTS_VIEW",
+          "INVOICES_VIEW",
+          "INVOICES_MANAGE",
+          "COMMISSIONS_VIEW",
+          "COMMISSIONS_MANAGE",
+          "PAYROLL_MANAGE",
+          "ATTENDANCE_MANAGE",
+        ],
+      },
       {
         href: "/commissions",
         label: "nav.commissions",
@@ -121,6 +138,8 @@ const groups: NavGroup[] = [
         icon: ClipboardCheck,
         permissions: ["ATTENDANCE_MANAGE"],
       },
+      { href: "/people", label: "nav.people", icon: UsersRound, permissions: ["PROFILES_VIEW", "PROFILES_MANAGE"] },
+      { href: "/profile", label: "nav.profile", icon: IdCard, permissions: ["PROFILE_SELF"] },
       { href: "/payslips", label: "nav.payslips", icon: ReceiptText, permissions: ["PAYROLL_SELF", "PAYROLL_MANAGE"] },
     ],
   },
@@ -129,7 +148,14 @@ const groups: NavGroup[] = [
     items: [
       { href: "/users", label: "nav.users", icon: UserCog, permissions: ["USERS_VIEW", "USERS_MANAGE"] },
       { href: "/roles", label: "nav.roles", icon: ShieldCheck, permissions: ["ROLES_VIEW", "ROLES_MANAGE"] },
-      { href: "/settings", label: "nav.settings", icon: Settings, permissions: ["SETTINGS_MANAGE"] },
+      {
+        href: "/import",
+        label: "nav.import",
+        icon: Upload,
+        permissions: ["CANDIDATES_MANAGE", "CLIENTS_MANAGE", "USERS_MANAGE"],
+      },
+      { href: "/settings/emails", label: "nav.emails", icon: Mail, permissions: ["EMAIL_TEMPLATES_MANAGE"] },
+      { href: "/settings", label: "nav.settings", icon: Settings, permissions: ["SETTINGS_MANAGE"], exact: true },
       { href: "/audit", label: "nav.audit", icon: ScrollText, permissions: ["AUDIT_VIEW"] },
       { href: "/system", label: "nav.system", icon: Activity, permissions: ["SYSTEM_VIEW"] },
     ],

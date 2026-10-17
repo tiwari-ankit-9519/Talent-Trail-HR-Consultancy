@@ -1,0 +1,52 @@
+export type ImportType = "candidates" | "clients" | "employees";
+
+export type ImportColumn = { key: string; required?: boolean; sample: string };
+
+export const importColumns: Record<ImportType, ImportColumn[]> = {
+  candidates: [
+    { key: "fullName", required: true, sample: "Asha Verma" },
+    { key: "email", required: true, sample: "asha.verma@example.com" },
+    { key: "phone", sample: "9876543210" },
+    { key: "currentCompany", sample: "Acme Industries" },
+    { key: "currentTitle", sample: "Accountant" },
+    { key: "totalExperienceYears", sample: "4.5" },
+    { key: "currentCtc", sample: "600000" },
+    { key: "expectedCtc", sample: "800000" },
+    { key: "noticePeriodDays", sample: "30" },
+    { key: "currentLocation", sample: "Lucknow" },
+    { key: "preferredLocation", sample: "Delhi" },
+    { key: "skills", sample: "Tally, GST, Excel" },
+    { key: "source", sample: "REFERRAL" },
+    { key: "notes", sample: "" },
+  ],
+  clients: [
+    { key: "name", required: true, sample: "Acme Industries" },
+    { key: "legalName", sample: "Acme Industries Pvt Ltd" },
+    { key: "industry", sample: "Manufacturing" },
+    { key: "website", sample: "https://acme.example.com" },
+    { key: "gstin", sample: "09ABCDE1234F1Z5" },
+    { key: "pan", sample: "ABCDE1234F" },
+    { key: "addressLine1", sample: "12 Industrial Area" },
+    { key: "addressLine2", sample: "" },
+    { key: "city", sample: "Lucknow" },
+    { key: "state", sample: "Uttar Pradesh" },
+    { key: "postalCode", sample: "226001" },
+    { key: "country", sample: "India" },
+    { key: "contactName", sample: "Ravi Kumar" },
+    { key: "contactEmail", sample: "ravi@acme.example.com" },
+    { key: "contactPhone", sample: "9123456780" },
+    { key: "contactDesignation", sample: "HR Head" },
+    { key: "contactPrimary", sample: "yes" },
+  ],
+  employees: [
+    { key: "fullName", required: true, sample: "Meera Singh" },
+    { key: "email", required: true, sample: "meera@talenttrail.in" },
+    { key: "role", required: true, sample: "Recruiter" },
+    { key: "employeeCode", sample: "TT-014" },
+    { key: "employmentType", sample: "FULL_TIME" },
+    { key: "designation", sample: "Recruiter" },
+    { key: "department", sample: "Recruitment" },
+    { key: "joiningDate", sample: "2026-10-01" },
+    { key: "phone", sample: "9876543210" },
+  ],
+};

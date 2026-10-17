@@ -1,17 +1,13 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
-import { t } from "@/lib/messages";
+import { LandingFooter } from "@/components/landing/ContactFooter";
+import LandingHeader from "@/components/landing/LandingHeader";
 
 export default function ApplyLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="public-shell">
-      <header className="public-header">
-        <Link href="/apply" className="brand">
-          {t("app.title")}
-        </Link>
-        <span className="muted">{t("apply.tagline")}</span>
-      </header>
-      <main className="public-content">{children}</main>
+    <div className="landing-shell flex min-h-screen flex-col bg-bg">
+      <LandingHeader />
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">{children}</main>
+      <LandingFooter />
     </div>
   );
 }

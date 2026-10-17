@@ -6,6 +6,8 @@ RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-14}"
 FILES_DIR="${FILES_DIR:-/data/files}"
 RUN_HOUR="${BACKUP_HOUR_UTC:-20}"
 
+. /ops/offsite.sh
+
 run_backup() {
   stamp="$(date -u +%Y%m%d-%H%M%S)"
   mkdir -p "$BACKUP_DIR"
@@ -18,6 +20,9 @@ run_backup() {
   fi
   find "$BACKUP_DIR" -type f \( -name 'db-*.dump' -o -name 'files-*.tar.gz' \) -mtime +"$RETENTION_DAYS" -delete
   echo "backup $stamp complete"
+  if offsite_enabled; then
+    offsite_push "$stamp" || { echo "offsite copy failed" >&2; return 1; }
+  fi
   if [ -n "${BACKUP_HEARTBEAT_URL:-}" ]; then
     wget -q -T 10 -O /dev/null "$BACKUP_HEARTBEAT_URL" || echo "heartbeat ping failed" >&2
   fi

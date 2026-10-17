@@ -130,7 +130,27 @@ public final class AuditActions {
     public static final String ENTITY_LEAVE_APPLICATION = "ENTITY_LEAVE_APPLICATION";
     public static final String LEAVE_REJECTED = "LEAVE_REJECTED";
     public static final String ENTITY_REQUEST = "REQUEST";
+    public static final String PROFILE_UPDATED = "PROFILE_UPDATED";
+    public static final String PROFILE_CONTACT_UPDATED = "PROFILE_CONTACT_UPDATED";
+    public static final String PROFILE_SENSITIVE_UPDATED = "PROFILE_SENSITIVE_UPDATED";
+    public static final String PROFILE_SENSITIVE_VIEWED = "PROFILE_SENSITIVE_VIEWED";
+    public static final String PROFILE_DOCUMENT_ADDED = "PROFILE_DOCUMENT_ADDED";
+    public static final String PROFILE_DOCUMENT_DOWNLOADED = "PROFILE_DOCUMENT_DOWNLOADED";
+    public static final String PROFILE_DOCUMENT_DELETED = "PROFILE_DOCUMENT_DELETED";
+    public static final String PROFILE_DOCUMENT_REVIEWED = "PROFILE_DOCUMENT_REVIEWED";
+    public static final String IMPORT_COMMITTED = "IMPORT_COMMITTED";
+    public static final String ENTITY_IMPORT = "ENTITY_IMPORT";
+    public static final String ENTITY_PROFILE = "ENTITY_PROFILE";
+    public static final String ENTITY_PROFILE_DOCUMENT = "ENTITY_PROFILE_DOCUMENT";
 
     private AuditActions() {
     }
+
+    public static final String EMAIL_TEMPLATE_UPDATED = "EMAIL_TEMPLATE_UPDATED";
+    public static final String EMAIL_TEMPLATE_RESET = "EMAIL_TEMPLATE_RESET";
+    public static final String EMAIL_TEMPLATE_TESTED = "EMAIL_TEMPLATE_TESTED";
+    public static final String REMINDER_UPDATED = "REMINDER_UPDATED";
+    public static final String REMINDERS_RUN = "REMINDERS_RUN";
+    public static final String ENTITY_EMAIL_TEMPLATE = "ENTITY_EMAIL_TEMPLATE";
+    public static final String ENTITY_REMINDER = "ENTITY_REMINDER";
 }

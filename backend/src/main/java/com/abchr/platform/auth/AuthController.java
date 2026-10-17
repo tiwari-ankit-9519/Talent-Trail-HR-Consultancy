@@ -7,6 +7,7 @@ import com.abchr.platform.auth.AuthDtos.SessionResponse;
 import com.abchr.platform.auth.AuthDtos.UserProfile;
 import com.abchr.platform.shared.config.AppProperties;
 import com.abchr.platform.shared.web.ApiException;
+import com.abchr.platform.shared.web.ClientIp;
 import com.abchr.platform.shared.web.ErrorCodes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -42,7 +43,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<SessionResponse> login(HttpServletRequest http, @Valid @RequestBody LoginRequest request) {
-        rateLimiter.check("login", http.getRemoteAddr());
+        rateLimiter.check("login", ClientIp.of(http));
         return withCookie(authService.login(request.email(), request.password()));
     }
 
@@ -51,7 +52,7 @@ public class AuthController {
             HttpServletRequest http,
             @CookieValue(name = REFRESH_COOKIE, required = false) String refreshToken) {
         requireGuardHeader(http);
-        rateLimiter.check("refresh", http.getRemoteAddr());
+        rateLimiter.check("refresh", ClientIp.of(http));
         return withCookie(authService.refresh(refreshToken));
     }
 
@@ -74,7 +75,7 @@ public class AuthController {
     @PostMapping("/change-password")
     public ResponseEntity<SessionResponse> changePassword(
             HttpServletRequest http, @Valid @RequestBody ChangePasswordRequest request) {
-        rateLimiter.check("password", http.getRemoteAddr());
+        rateLimiter.check("password", ClientIp.of(http));
         return withCookie(authService.changePassword(request.currentPassword(), request.newPassword()));
     }
 

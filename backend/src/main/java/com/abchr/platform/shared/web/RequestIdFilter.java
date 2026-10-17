@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
+import com.abchr.platform.shared.logging.SqlStats;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.ThreadContext;
@@ -30,14 +31,17 @@ public class RequestIdFilter extends OncePerRequestFilter {
     private static final String[] HTTP_KEYS = {"httpMethod", "httpPath", "httpStatus", "durationMs", "errorCode"};
 
     private final long slowRequestMs;
+    private final long manyQueries;
     private final boolean bodyLogging;
     private final HttpBodyLogger bodyLogger;
 
     public RequestIdFilter(
             @Value("${app.logging.slow-request-ms:1000}") long slowRequestMs,
+            @Value("${app.logging.sql.many-queries:30}") long manyQueries,
             @Value("${app.logging.http-bodies-enabled:false}") boolean bodyLogging,
             HttpBodyLogger bodyLogger) {
         this.slowRequestMs = slowRequestMs;
+        this.manyQueries = manyQueries;
         this.bodyLogging = bodyLogging;
         this.bodyLogger = bodyLogger;
     }
@@ -54,6 +58,7 @@ public class RequestIdFilter extends OncePerRequestFilter {
         ThreadContext.put("httpMethod", request.getMethod());
         ThreadContext.put("httpPath", request.getRequestURI());
         long started = System.nanoTime();
+        SqlStats.begin();
         Throwable failure = null;
         boolean capture = bodyLogging && !request.getRequestURI().startsWith("/actuator")
                 && !request.getRequestURI().endsWith("/notifications/stream");
@@ -61,7 +66,7 @@ public class RequestIdFilter extends OncePerRequestFilter {
         HttpServletResponse out = capture ? new ContentCachingResponseWrapper(response) : response;
         if (!request.getRequestURI().startsWith("/actuator")) {
             ACCESS.info("HTTP request started {} {} ip={}", request.getMethod(), request.getRequestURI(),
-                    request.getRemoteAddr());
+                    ClientIp.of(request));
         }
         try {
             chain.doFilter(in, out);
@@ -81,6 +86,7 @@ public class RequestIdFilter extends OncePerRequestFilter {
             if (capture) {
                 ((ContentCachingResponseWrapper) out).copyBodyToResponse();
             }
+            SqlStats.end();
             ThreadContext.remove(MDC_KEY);
             ThreadContext.remove(MDC_USER_KEY);
             ThreadContext.remove(MDC_USER_EMAIL_KEY);
@@ -111,23 +117,29 @@ public class RequestIdFilter extends OncePerRequestFilter {
             ThreadContext.put("errorCode", String.valueOf(code));
         }
 
+        SqlStats.Snapshot sql = SqlStats.snapshot();
         String agent = request.getHeader("User-Agent");
         String detail = (code == null ? "" : " code=" + code)
+                + (sql.count() == 0 ? "" : " queries=" + sql.count() + " dbMs=" + sql.millis())
                 + (exception == null ? "" : " exception=" + exception)
                 + (agent == null ? "" : " ua=\"" + (agent.length() > 120 ? agent.substring(0, 120) : agent) + "\"");
         String line = "{} {} -> {} in {} ms ip={}{}";
 
         boolean noisy = path.startsWith("/actuator");
         if (status >= 500) {
-            ACCESS.error(line, request.getMethod(), target, status, millis, request.getRemoteAddr(), detail);
+            ACCESS.error(line, request.getMethod(), target, status, millis, ClientIp.of(request), detail);
         } else if (status >= 400) {
-            ACCESS.warn(line, request.getMethod(), target, status, millis, request.getRemoteAddr(), detail);
+            ACCESS.warn(line, request.getMethod(), target, status, millis, ClientIp.of(request), detail);
         } else if (millis >= slowRequestMs && !noisy) {
-            ACCESS.warn("SLOW " + line, request.getMethod(), target, status, millis, request.getRemoteAddr(), detail);
+            ACCESS.warn("SLOW " + line, request.getMethod(), target, status, millis, ClientIp.of(request), detail);
         } else if (noisy) {
-            ACCESS.debug(line, request.getMethod(), target, status, millis, request.getRemoteAddr(), detail);
+            ACCESS.debug(line, request.getMethod(), target, status, millis, ClientIp.of(request), detail);
         } else {
-            ACCESS.info(line, request.getMethod(), target, status, millis, request.getRemoteAddr(), detail);
+            ACCESS.info(line, request.getMethod(), target, status, millis, ClientIp.of(request), detail);
+        }
+        if (sql.count() >= manyQueries && !noisy) {
+            ACCESS.warn("MANY QUERIES {} {} ran {} queries in {} ms of database time", request.getMethod(), target,
+                    sql.count(), sql.millis());
         }
     }
 }

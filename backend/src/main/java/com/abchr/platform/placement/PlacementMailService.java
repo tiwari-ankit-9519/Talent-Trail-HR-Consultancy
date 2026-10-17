@@ -8,6 +8,9 @@ import com.abchr.platform.client.Client;
 import com.abchr.platform.client.ClientRepository;
 import com.abchr.platform.job.Job;
 import com.abchr.platform.job.JobRepository;
+import com.abchr.platform.reminder.EmailTemplateService;
+import com.abchr.platform.reminder.ReminderDtos.Rendered;
+import com.abchr.platform.reminder.TemplateCatalog;
 import com.abchr.platform.shared.mail.EmailStatus;
 import com.abchr.platform.shared.mail.EmailHandler;
 import com.abchr.platform.shared.mail.EmailQueue;
@@ -17,7 +20,9 @@ import com.abchr.platform.shared.web.ApiException;
 import com.abchr.platform.shared.web.ErrorCodes;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +44,7 @@ public class PlacementMailService implements EmailHandler {
     private final MailService mailService;
     private final EmailQueue emailQueue;
     private final AuditService auditService;
+    private final EmailTemplateService templateService;
     private final TransactionTemplate tx;
     private final DateTimeFormatter day;
 
@@ -50,6 +56,7 @@ public class PlacementMailService implements EmailHandler {
             MailService mailService,
             EmailQueue emailQueue,
             AuditService auditService,
+            EmailTemplateService templateService,
             PlatformTransactionManager transactionManager) {
         this.placementRepository = placementRepository;
         this.jobRepository = jobRepository;
@@ -58,6 +65,7 @@ public class PlacementMailService implements EmailHandler {
         this.mailService = mailService;
         this.emailQueue = emailQueue;
         this.auditService = auditService;
+        this.templateService = templateService;
         this.tx = new TransactionTemplate(transactionManager);
         this.day = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
     }
@@ -101,9 +109,9 @@ public class PlacementMailService implements EmailHandler {
         Job job = jobRepository.findById(placement.getJobId()).orElseThrow();
         Client client = clientRepository.findById(placement.getClientId()).orElseThrow();
         Candidate candidate = candidateRepository.findById(placement.getCandidateId()).orElseThrow();
-        String subject = "Congratulations! You have been selected for " + job.getTitle() + " at " + client.getName();
-        MailService.Result result = mailService.send(List.of(candidate.getEmail()), subject,
-                body(placement, job, client, candidate), null, Actor.current().email());
+        Rendered rendered = templateService.render(TemplateCatalog.OFFER_EMAIL, offerValues(placement, job, client, candidate));
+        MailService.Result result = mailService.send(List.of(candidate.getEmail()), rendered.subject(),
+                rendered.body(), null, Actor.current().email());
         tx.executeWithoutResult(status -> {
             Placement fresh = placementRepository.findById(placementId).orElseThrow();
             fresh.recordOfferEmail(result.status(), result.error());
@@ -116,20 +124,13 @@ public class PlacementMailService implements EmailHandler {
         });
     }
 
-    private String body(Placement placement, Job job, Client client, Candidate candidate) {
-        StringBuilder text = new StringBuilder();
-        text.append("Dear ").append(candidate.getFullName()).append(",\n\n");
-        text.append("Congratulations! ").append(client.getName()).append(" has selected you for the position of ")
-                .append(job.getTitle()).append(".\n\n");
-        text.append("Offered CTC: INR ")
-                .append(NumberFormat.getNumberInstance(Locale.of("en", "IN")).format(placement.getOfferedCtc()))
-                .append(" per year\n");
-        text.append("Expected joining date: ").append(day.format(placement.getExpectedJoiningDate())).append("\n\n");
-        text.append("Please reply to this email to confirm that you accept the offer. If you have any questions, ")
-                .append("or if you are unable to accept, please let us know in your reply.\n\n");
-        text.append("Once you confirm, we will coordinate the joining formalities with ")
-                .append(client.getName()).append(".\n\n");
-        text.append("Regards,\nTalent Trail HR Solutions\n");
-        return text.toString();
+    private Map<String, String> offerValues(Placement placement, Job job, Client client, Candidate candidate) {
+        Map<String, String> values = new LinkedHashMap<>();
+        values.put("candidate", candidate.getFullName());
+        values.put("client", client.getName());
+        values.put("jobTitle", job.getTitle());
+        values.put("ctc", "INR " + NumberFormat.getNumberInstance(Locale.of("en", "IN")).format(placement.getOfferedCtc()));
+        values.put("joiningDate", day.format(placement.getExpectedJoiningDate()));
+        return values;
     }
 }

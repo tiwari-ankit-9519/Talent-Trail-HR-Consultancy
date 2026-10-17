@@ -1,6 +1,9 @@
 package com.abchr.platform.invoice;
 
 import com.abchr.platform.invoice.InvoiceDtos.InvoiceDetail;
+import com.abchr.platform.reminder.EmailTemplateService;
+import com.abchr.platform.reminder.ReminderDtos.Rendered;
+import com.abchr.platform.reminder.TemplateCatalog;
 import com.abchr.platform.settings.CompanyService;
 import com.abchr.platform.shared.mail.EmailHandler;
 import com.abchr.platform.shared.mail.EmailStatus;
@@ -11,7 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
@@ -28,16 +33,19 @@ public class InvoiceMailService implements EmailHandler {
     private final InvoicePdfService pdfService;
     private final MailService mailService;
     private final CompanyService companyService;
+    private final EmailTemplateService templateService;
 
     public InvoiceMailService(
             InvoiceService invoiceService,
             InvoicePdfService pdfService,
             MailService mailService,
-            CompanyService companyService) {
+            CompanyService companyService,
+            EmailTemplateService templateService) {
         this.invoiceService = invoiceService;
         this.pdfService = pdfService;
         this.mailService = mailService;
         this.companyService = companyService;
+        this.templateService = templateService;
     }
 
     public InvoiceDetail send(UUID id, List<String> to) {
@@ -66,17 +74,24 @@ public class InvoiceMailService implements EmailHandler {
         String company = invoice.sellerName;
         NumberFormat money = NumberFormat.getNumberInstance(Locale.of("en", "IN"));
         money.setMinimumFractionDigits(2);
-        String subject = "Invoice " + invoice.number + " from " + company;
-        String body = "Dear Sir/Madam,\n\n"
-                + "Please find attached invoice " + invoice.number + " for Rs. " + money.format(invoice.totalAmount)
-                + " towards the placement of " + invoice.candidateName + " as " + invoice.jobTitle + " ("
-                + invoice.jobCode + "), who joined on " + DAY.format(invoice.joiningDate) + ".\n\n"
-                + "Payment is due by " + DAY.format(invoice.dueDate) + ".\n\n"
-                + "Regards,\n" + company;
+        Map<String, String> values = new LinkedHashMap<>();
+        values.put("company", company);
+        values.put("invoiceNumber", invoice.number);
+        values.put("amount", "Rs. " + money.format(invoice.totalAmount));
+        values.put("candidate", invoice.candidateName);
+        values.put("jobTitle", invoice.jobTitle);
+        values.put("jobCode", invoice.jobCode);
+        values.put("joiningDate", DAY.format(invoice.joiningDate));
+        values.put("dueDate", DAY.format(invoice.dueDate));
+        Rendered rendered = templateService.render(TemplateCatalog.INVOICE_SEND, values);
+        String subject = rendered.subject();
+        String body = rendered.body();
         Path file = null;
         try {
             file = Files.createTempFile("invoice-", ".pdf");
+            long renderStarted = System.nanoTime();
             Files.write(file, pdfService.render(invoice));
+            LOG.info("Invoice {} PDF rendered in {} ms", invoice.number, (System.nanoTime() - renderStarted) / 1_000_000);
             String fileName = "Invoice-" + invoice.number.replace('/', '-') + ".pdf";
             String replyTo = companyService.load().getEmail();
             MailService.Result result = mailService.send(to, subject, body,

@@ -1001,3 +1001,264 @@ export type SystemHealth = {
   liveConnections: number;
   checks: SystemCheck[];
 };
+
+export type EmploymentType = "FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERN";
+
+export type ProfileDocumentType =
+  "ID_PROOF" | "ADDRESS_PROOF" | "OFFER_LETTER" | "EDUCATION" | "EXPERIENCE" | "BANK_PROOF" | "OTHER";
+
+export type ProfileSummary = {
+  userId: string;
+  fullName: string;
+  email: string;
+  active: boolean;
+  employeeCode: string | null;
+  designation: string | null;
+  department: string | null;
+  joiningDate: string | null;
+  managerName: string | null;
+  bankComplete: boolean;
+  documentCount: number;
+  expiringDocuments: number;
+};
+
+export type ProfileSensitive = {
+  bankAccountHolder: string | null;
+  bankName: string | null;
+  bankAccountNumber: string | null;
+  bankIfsc: string | null;
+  pan: string | null;
+  uan: string | null;
+  masked: boolean;
+};
+
+export type ProfileView = {
+  userId: string;
+  fullName: string;
+  email: string;
+  active: boolean;
+  roles: string[];
+  employeeCode: string | null;
+  employmentType: EmploymentType;
+  designation: string | null;
+  department: string | null;
+  joiningDate: string | null;
+  managerUserId: string | null;
+  managerName: string | null;
+  phone: string | null;
+  dateOfBirth: string | null;
+  addressLine: string | null;
+  city: string | null;
+  state: string | null;
+  pincode: string | null;
+  emergencyName: string | null;
+  emergencyPhone: string | null;
+  emergencyRelation: string | null;
+  sensitive: ProfileSensitive | null;
+  canEdit: boolean;
+  canEditContact: boolean;
+  canEditSensitive: boolean;
+  canManageDocuments: boolean;
+  version: number | null;
+};
+
+export type ProfileManagerOption = { id: string; fullName: string };
+
+export type ProfileDocument = {
+  id: string;
+  docType: ProfileDocumentType;
+  title: string;
+  fileName: string;
+  fileSize: number;
+  expiresOn: string | null;
+  expired: boolean;
+  expiringSoon: boolean;
+  uploadedAt: string;
+  reviewStatus: "PENDING" | "VERIFIED" | "REJECTED";
+  uploadedBySelf: boolean;
+  reviewNote: string | null;
+  reviewedBy: string | null;
+  reviewedAt: string | null;
+  canDelete: boolean;
+  canReview: boolean;
+};
+
+export type PayrollRegisterRow = {
+  userId: string;
+  name: string;
+  email: string;
+  employeeCode: string | null;
+  designation: string | null;
+  payableDays: number;
+  lossOfPayDays: number;
+  gross: number;
+  earnedGross: number;
+  basic: number | null;
+  hra: number | null;
+  allowance: number | null;
+  commission: number;
+  otherEarnings: number;
+  pf: number;
+  pt: number;
+  tds: number;
+  otherDeductions: number;
+  net: number;
+  bankAccountHolder: string | null;
+  bankName: string | null;
+  bankIfsc: string | null;
+  bankAccountNumber: string | null;
+  pan: string | null;
+};
+
+export type PayrollRegisterReport = {
+  month: string;
+  status: "NONE" | "DRAFT" | "FINALIZED";
+  bankIncluded: boolean;
+  rows: PayrollRegisterRow[];
+  totals: {
+    earnedGross: number;
+    commission: number;
+    otherEarnings: number;
+    pf: number;
+    pt: number;
+    tds: number;
+    otherDeductions: number;
+    net: number;
+  };
+};
+
+export type LeaveReportType = { id: string; name: string; unpaid: boolean; yearlyDays: number };
+
+export type LeaveReportRow = {
+  userId: string;
+  name: string;
+  email: string;
+  cells: { typeId: string; approved: number; pending: number; remaining: number | null }[];
+  totalApproved: number;
+  totalPending: number;
+};
+
+export type LeaveReport = { year: number; types: LeaveReportType[]; rows: LeaveReportRow[] };
+
+export type ReceivableRow = {
+  invoiceId: string;
+  number: string;
+  clientName: string;
+  candidateName: string;
+  status: string;
+  invoiceDate: string;
+  dueDate: string;
+  total: number;
+  settled: number;
+  outstanding: number;
+  daysOverdue: number;
+  bucket: "NOT_DUE" | "D1_30" | "D31_60" | "D61_90" | "D90_PLUS";
+};
+
+export type ReceivablesReport = {
+  asOf: string;
+  outstanding: number;
+  overdue: number;
+  aging: { notDue: number; days1to30: number; days31to60: number; days61to90: number; days90plus: number };
+  rows: ReceivableRow[];
+};
+
+export type TaxMonthRow = {
+  month: string;
+  baseAmount: number;
+  cgst: number;
+  sgst: number;
+  igst: number;
+  total: number;
+  tdsExpected: number;
+  tdsDeducted: number;
+  received: number;
+};
+
+export type TaxSummaryReport = { months: TaxMonthRow[]; totals: TaxMonthRow };
+
+export type CommissionReportRow = {
+  commissionId: string;
+  recruiter: string;
+  candidateName: string;
+  clientName: string;
+  jobCode: string;
+  joiningDate: string;
+  amount: number | null;
+  status: string;
+  state: "PAYABLE" | "PAID" | "CANCELLED" | "AMOUNT_NOT_SET" | "PERIOD_RUNNING" | "INVOICE_UNPAID";
+  payableAfter: string;
+  paidOn: string | null;
+  paymentReference: string | null;
+  invoiceNumber: string | null;
+  invoiceStatus: string | null;
+};
+
+export type CommissionsReport = {
+  payable: number;
+  waiting: number;
+  paid: number;
+  byRecruiter: { recruiter: string; count: number; payable: number; waiting: number; paid: number }[];
+  rows: CommissionReportRow[];
+};
+
+export type EmailVariable = { name: string; description: string; sample: string };
+
+export type EmailTemplate = {
+  code: string;
+  name: string;
+  description: string;
+  audience: "CLIENT" | "CANDIDATE" | "STAFF";
+  variables: EmailVariable[];
+  subject: string;
+  body: string;
+  defaultSubject: string;
+  defaultBody: string;
+  customised: boolean;
+  updatedAt: string | null;
+};
+
+export type ReminderSetting = {
+  code: string;
+  name: string;
+  description: string;
+  audience: "CLIENT" | "CANDIDATE" | "STAFF";
+  reference: string;
+  offsetsHelp: string;
+  templates: string[];
+  enabled: boolean;
+  offsets: number[];
+  extraRecipients: string[];
+};
+
+export type ReminderLogEntry = {
+  id: string;
+  code: string;
+  offsetDays: number;
+  recipients: string;
+  subject: string;
+  sentAt: string;
+};
+
+export type ReminderRunResult = { sent: Record<string, number>; mailConfigured: boolean };
+
+export type ImportRowResult = {
+  row: number;
+  label: string;
+  status: "VALID" | "IMPORTED" | "DUPLICATE" | "INVALID";
+  messages: string[];
+};
+
+export type ImportCredential = { email: string; fullName: string; password: string };
+
+export type ImportReport = {
+  type: string;
+  committed: boolean;
+  total: number;
+  valid: number;
+  imported: number;
+  duplicates: number;
+  invalid: number;
+  rows: ImportRowResult[];
+  credentials: ImportCredential[];
+};

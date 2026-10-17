@@ -1,5 +1,6 @@
 package com.abchr.platform.publicapi;
 
+import com.abchr.platform.shared.web.ClientIp;
 import com.abchr.platform.job.JobDtos.PublicJob;
 import com.abchr.platform.job.JobService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class PublicController {
             HttpServletRequest request) {
         applyService.apply(code, new PublicApplyService.ApplyForm(fullName, email, phone, currentCompany,
                 currentTitle, totalExperienceYears, currentCtc, expectedCtc, noticePeriodDays, currentLocation,
-                skills, consent, website, resume), request.getRemoteAddr());
+                skills, consent, website, resume), ClientIp.of(request));
         return Map.of("status", "RECEIVED");
     }
 }

@@ -1,4 +1,32 @@
-name: ${COMPOSE_PROJECT_NAME:-abc-hr}
+name: ${COMPOSE_PROJECT_NAME:-Talent Trail HR Consultancy}
+
+x-backup-base: &backup-base
+  build:
+    context: ./ops/backup
+  environment:
+    DB_HOST: postgres
+    DB_NAME: ${DB_NAME}
+    DB_USER: ${DB_USER}
+    DB_PASSWORD: ${DB_PASSWORD}
+    BACKUP_DIR: ${BACKUP_DIR:-/backups}
+    BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
+    FILES_DIR: /data/files
+    BACKUP_HEARTBEAT_URL: ${BACKUP_HEARTBEAT_URL:-}
+    OFFSITE_ENABLED: ${OFFSITE_ENABLED:-false}
+    OFFSITE_PATH: ${OFFSITE_PATH:-}
+    OFFSITE_RETENTION_DAYS: ${OFFSITE_RETENTION_DAYS:-30}
+    OFFSITE_ENCRYPTION_PASSPHRASE: ${OFFSITE_ENCRYPTION_PASSPHRASE:-}
+    RCLONE_CONFIG_OFFSITE_TYPE: ${OFFSITE_TYPE:-s3}
+    RCLONE_CONFIG_OFFSITE_PROVIDER: ${OFFSITE_PROVIDER:-Other}
+    RCLONE_CONFIG_OFFSITE_ENDPOINT: ${OFFSITE_ENDPOINT:-}
+    RCLONE_CONFIG_OFFSITE_REGION: ${OFFSITE_REGION:-}
+    RCLONE_CONFIG_OFFSITE_ACCESS_KEY_ID: ${OFFSITE_ACCESS_KEY:-}
+    RCLONE_CONFIG_OFFSITE_SECRET_ACCESS_KEY: ${OFFSITE_SECRET_KEY:-}
+    RCLONE_CONFIG_OFFSITE_HOST: ${OFFSITE_SFTP_HOST:-}
+    RCLONE_CONFIG_OFFSITE_USER: ${OFFSITE_SFTP_USER:-}
+    RCLONE_CONFIG_OFFSITE_PASS: ${OFFSITE_SFTP_PASS_OBSCURED:-}
+  networks:
+    - internal
 
 services:
   postgres:
@@ -120,27 +148,25 @@ services:
       - internal
 
   backup:
-    image: postgres:17-alpine
+    <<: *backup-base
     restart: unless-stopped
     entrypoint: ["sh", "/ops/backup.sh"]
-    environment:
-      DB_HOST: postgres
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      BACKUP_DIR: ${BACKUP_DIR:-/backups}
-      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
-      FILES_DIR: /data/files
-      BACKUP_HEARTBEAT_URL: ${BACKUP_HEARTBEAT_URL:-}
     volumes:
-      - ./ops/backup.sh:/ops/backup.sh:ro
+      - ./ops:/ops:ro
       - filedata:/data/files:ro
       - backups:/backups
     depends_on:
       postgres:
         condition: service_healthy
-    networks:
-      - internal
+
+  restore:
+    <<: *backup-base
+    profiles: ["restore"]
+    entrypoint: ["sh", "/ops/restore.sh"]
+    volumes:
+      - ./ops:/ops:ro
+      - filedata:/data/files
+      - backups:/backups
 
   uptime:
     image: louislam/uptime-kuma:1
