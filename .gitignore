@@ -1,0 +1,8 @@
+.env
+.env.prod
+*.log
+logs/
+target/
+node_modules/
+.next/
+backups/

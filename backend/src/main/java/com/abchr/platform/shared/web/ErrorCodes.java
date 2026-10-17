@@ -1,0 +1,137 @@
+package com.abchr.platform.shared.web;
+
+public final class ErrorCodes {
+
+    public static final String VALIDATION_FAILED = "VALIDATION_FAILED";
+    public static final String STALE_VERSION = "STALE_VERSION";
+    public static final String CONFLICT = "CONFLICT";
+    public static final String FORBIDDEN = "FORBIDDEN";
+    public static final String UNAUTHENTICATED = "UNAUTHENTICATED";
+    public static final String INTERNAL_ERROR = "INTERNAL_ERROR";
+
+    public static final String AUTH_INVALID_CREDENTIALS = "AUTH_INVALID_CREDENTIALS";
+    public static final String AUTH_ACCOUNT_LOCKED = "AUTH_ACCOUNT_LOCKED";
+    public static final String AUTH_REFRESH_INVALID = "AUTH_REFRESH_INVALID";
+    public static final String AUTH_CURRENT_PASSWORD_WRONG = "AUTH_CURRENT_PASSWORD_WRONG";
+    public static final String AUTH_PASSWORD_UNCHANGED = "AUTH_PASSWORD_UNCHANGED";
+    public static final String PASSWORD_POLICY = "PASSWORD_POLICY";
+
+    public static final String USER_NOT_FOUND = "USER_NOT_FOUND";
+    public static final String USER_EMAIL_EXISTS = "USER_EMAIL_EXISTS";
+    public static final String USER_SELF_DEACTIVATE = "USER_SELF_DEACTIVATE";
+    public static final String USER_LAST_ADMIN = "USER_LAST_ADMIN";
+
+    public static final String ROLE_NOT_FOUND = "ROLE_NOT_FOUND";
+    public static final String ROLE_NAME_EXISTS = "ROLE_NAME_EXISTS";
+    public static final String ROLE_SYSTEM_PROTECTED = "ROLE_SYSTEM_PROTECTED";
+    public static final String ROLE_IN_USE = "ROLE_IN_USE";
+    public static final String PERMISSION_UNKNOWN = "PERMISSION_UNKNOWN";
+
+    public static final String CLIENT_NOT_FOUND = "CLIENT_NOT_FOUND";
+    public static final String CLIENT_NAME_EXISTS = "CLIENT_NAME_EXISTS";
+    public static final String CLIENT_TERMS_INVALID = "CLIENT_TERMS_INVALID";
+    public static final String CONTACT_NOT_FOUND = "CONTACT_NOT_FOUND";
+
+    public static final String JOB_NOT_FOUND = "JOB_NOT_FOUND";
+    public static final String JOB_INVALID = "JOB_INVALID";
+    public static final String JOB_CLIENT_INACTIVE = "JOB_CLIENT_INACTIVE";
+    public static final String JOB_NOT_ACCEPTING = "JOB_NOT_ACCEPTING";
+    public static final String CANDIDATE_NOT_FOUND = "CANDIDATE_NOT_FOUND";
+    public static final String CANDIDATE_EMAIL_EXISTS = "CANDIDATE_EMAIL_EXISTS";
+    public static final String CANDIDATE_BLOCKED = "CANDIDATE_BLOCKED";
+    public static final String APPLICATION_EXISTS = "APPLICATION_EXISTS";
+    public static final String APPLICATION_NOT_FOUND = "APPLICATION_NOT_FOUND";
+    public static final String RESUME_INVALID = "RESUME_INVALID";
+    public static final String RESUME_NOT_FOUND = "RESUME_NOT_FOUND";
+    public static final String CONSENT_REQUIRED = "CONSENT_REQUIRED";
+    public static final String SUBMISSION_NOT_FOUND = "SUBMISSION_NOT_FOUND";
+    public static final String SUBMISSION_EXISTS = "SUBMISSION_EXISTS";
+    public static final String SUBMISSION_CLOSED = "SUBMISSION_CLOSED";
+    public static final String SUBMISSION_INVALID = "SUBMISSION_INVALID";
+    public static final String INTERVIEW_NOT_FOUND = "INTERVIEW_NOT_FOUND";
+    public static final String INTERVIEW_INVALID = "INTERVIEW_INVALID";
+    public static final String INTERVIEW_NOT_SCHEDULED = "INTERVIEW_NOT_SCHEDULED";
+    public static final String INTERVIEW_TIME_PAST = "INTERVIEW_TIME_PAST";
+    public static final String INTERVIEW_LOCATION_REQUIRED = "INTERVIEW_LOCATION_REQUIRED";
+    public static final String SUBMISSION_WITHDRAWN = "SUBMISSION_WITHDRAWN";
+    public static final String SUBMISSION_EMAIL_SENT = "SUBMISSION_EMAIL_SENT";
+    public static final String FEEDBACK_DATE_FUTURE = "FEEDBACK_DATE_FUTURE";
+    public static final String JOB_NOT_OPEN = "JOB_NOT_OPEN";
+    public static final String FEEDBACK_INVALID = "FEEDBACK_INVALID";
+    public static final String PLACEMENT_NOT_FOUND = "PLACEMENT_NOT_FOUND";
+    public static final String PLACEMENT_EXISTS = "PLACEMENT_EXISTS";
+    public static final String SUBMISSION_NOT_SELECTED = "SUBMISSION_NOT_SELECTED";
+    public static final String OFFER_NOT_OPEN = "OFFER_NOT_OPEN";
+    public static final String OFFER_DATE_FUTURE = "OFFER_DATE_FUTURE";
+    public static final String JOINING_DATE_BEFORE_OFFER = "JOINING_DATE_BEFORE_OFFER";
+    public static final String EXPECTED_DATE_BEFORE_OFFER = "EXPECTED_DATE_BEFORE_OFFER";
+    public static final String ACCEPTED_DATE_INVALID = "ACCEPTED_DATE_INVALID";
+    public static final String JOINING_NEEDS_ACCEPTED = "JOINING_NEEDS_ACCEPTED";
+    public static final String JOINING_DATE_FUTURE = "JOINING_DATE_FUTURE";
+    public static final String NOT_JOINED_NOT_ALLOWED = "NOT_JOINED_NOT_ALLOWED";
+    public static final String JOINING_EMAIL_INVALID = "JOINING_EMAIL_INVALID";
+    public static final String JOINING_EMAIL_NOT_FOUND = "JOINING_EMAIL_NOT_FOUND";
+    public static final String JOINING_EMAIL_TOO_EARLY = "JOINING_EMAIL_TOO_EARLY";
+    public static final String COMPANY_PROFILE_INCOMPLETE = "COMPANY_PROFILE_INCOMPLETE";
+    public static final String COMPANY_GSTIN_MISSING = "COMPANY_GSTIN_MISSING";
+    public static final String INVOICE_NOT_FOUND = "INVOICE_NOT_FOUND";
+    public static final String INVOICE_EXISTS = "INVOICE_EXISTS";
+    public static final String INVOICE_NEEDS_JOINING = "INVOICE_NEEDS_JOINING";
+    public static final String INVOICE_NEEDS_JOINING_EMAIL = "INVOICE_NEEDS_JOINING_EMAIL";
+    public static final String INVOICE_DATE_INVALID = "INVOICE_DATE_INVALID";
+    public static final String INVOICE_CANCELLED = "INVOICE_CANCELLED";
+    public static final String INVOICE_HAS_PAYMENTS = "INVOICE_HAS_PAYMENTS";
+    public static final String INVOICE_FEE_INVALID = "INVOICE_FEE_INVALID";
+    public static final String PAYMENT_NOT_FOUND = "PAYMENT_NOT_FOUND";
+    public static final String PAYMENT_EXCEEDS_BALANCE = "PAYMENT_EXCEEDS_BALANCE";
+    public static final String PAYMENT_AMOUNT_REQUIRED = "PAYMENT_AMOUNT_REQUIRED";
+    public static final String PAYMENT_DATE_INVALID = "PAYMENT_DATE_INVALID";
+    public static final String INVOICE_RECIPIENT_REQUIRED = "INVOICE_RECIPIENT_REQUIRED";
+    public static final String EXIT_NEEDS_JOINED = "EXIT_NEEDS_JOINED";
+    public static final String EXIT_EXISTS = "EXIT_EXISTS";
+    public static final String EXIT_DATE_INVALID = "EXIT_DATE_INVALID";
+    public static final String REPLACEMENT_NOT_FOUND = "REPLACEMENT_NOT_FOUND";
+    public static final String REPLACEMENT_NOT_OPEN = "REPLACEMENT_NOT_OPEN";
+    public static final String REPLACEMENT_PLACEMENT_MISMATCH = "REPLACEMENT_PLACEMENT_MISMATCH";
+    public static final String REPLACEMENT_SAME_CANDIDATE = "REPLACEMENT_SAME_CANDIDATE";
+    public static final String REPLACEMENT_PLACEMENT_INVALID = "REPLACEMENT_PLACEMENT_INVALID";
+    public static final String REPLACEMENT_PLACEMENT_LINKED = "REPLACEMENT_PLACEMENT_LINKED";
+    public static final String REPLACEMENT_PLACEMENT_INVOICED = "REPLACEMENT_PLACEMENT_INVOICED";
+    public static final String INVOICE_REPLACEMENT_FREE = "INVOICE_REPLACEMENT_FREE";
+    public static final String REPORT_RANGE_INVALID = "REPORT_RANGE_INVALID";
+    public static final String COMMISSION_NOT_FOUND = "COMMISSION_NOT_FOUND";
+    public static final String COMMISSION_CLOSED = "COMMISSION_CLOSED";
+    public static final String COMMISSION_AMOUNT_RANGE = "COMMISSION_AMOUNT_RANGE";
+    public static final String COMMISSION_AMOUNT_MISSING = "COMMISSION_AMOUNT_MISSING";
+    public static final String COMMISSION_PERIOD_RUNNING = "COMMISSION_PERIOD_RUNNING";
+    public static final String COMMISSION_INVOICE_UNPAID = "COMMISSION_INVOICE_UNPAID";
+    public static final String COMMISSION_PAID_DATE_INVALID = "COMMISSION_PAID_DATE_INVALID";
+    public static final String ATTENDANCE_ALREADY_CHECKED_IN = "ATTENDANCE_ALREADY_CHECKED_IN";
+    public static final String ATTENDANCE_NOT_CHECKED_IN = "ATTENDANCE_NOT_CHECKED_IN";
+    public static final String ATTENDANCE_ALREADY_CHECKED_OUT = "ATTENDANCE_ALREADY_CHECKED_OUT";
+    public static final String ATTENDANCE_DATE_INVALID = "ATTENDANCE_DATE_INVALID";
+    public static final String ATTENDANCE_TIME_INVALID = "ATTENDANCE_TIME_INVALID";
+    public static final String ATTENDANCE_REQUEST_NOT_FOUND = "ATTENDANCE_REQUEST_NOT_FOUND";
+    public static final String ATTENDANCE_REQUEST_EXISTS = "ATTENDANCE_REQUEST_EXISTS";
+    public static final String ATTENDANCE_REQUEST_CLOSED = "ATTENDANCE_REQUEST_CLOSED";
+    public static final String ATTENDANCE_SETTINGS_INVALID = "ATTENDANCE_SETTINGS_INVALID";
+    public static final String ATTENDANCE_MONTH_INVALID = "ATTENDANCE_MONTH_INVALID";
+    public static final String ATTENDANCE_USER_NOT_FOUND = "ATTENDANCE_USER_NOT_FOUND";
+    public static final String HOLIDAY_EXISTS = "HOLIDAY_EXISTS";
+    public static final String HOLIDAY_NOT_FOUND = "HOLIDAY_NOT_FOUND";
+    public static final String HOLIDAY_IN_USE = "HOLIDAY_IN_USE";
+    public static final String LEAVE_NOT_FOUND = "LEAVE_NOT_FOUND";
+    public static final String LEAVE_DATE_INVALID = "LEAVE_DATE_INVALID";
+    public static final String LEAVE_QUOTA_EXCEEDED = "LEAVE_QUOTA_EXCEEDED";
+    public static final String LEAVE_ALREADY_TAKEN = "LEAVE_ALREADY_TAKEN";
+    public static final String LEAVE_NOT_OPTIONAL_HOLIDAY = "LEAVE_NOT_OPTIONAL_HOLIDAY";
+    public static final String LEAVE_NOT_ALLOWED = "LEAVE_NOT_ALLOWED";
+    public static final String COMP_OFF_NONE = "COMP_OFF_NONE";
+    public static final String COMP_OFF_EXISTS = "COMP_OFF_EXISTS";
+    public static final String LEAVE_CLOSED = "LEAVE_CLOSED";
+    public static final String LEAVE_SELF_APPROVAL = "LEAVE_SELF_APPROVAL";
+    public static final String RATE_LIMITED = "RATE_LIMITED";
+
+    private ErrorCodes() {
+    }
+}

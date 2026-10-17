@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Properties>
+        <Property name="SERVICE_NAME">${spring:app.logging.service-name:-abc-hr-platform}</Property>
+        <Property name="ENVIRONMENT">${spring:app.logging.environment:-local}</Property>
+        <Property name="LOG_FILE">${sys:LOG_FILE:-logs/platform.log}</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSSXXX} %-5level [%t] [service=${SERVICE_NAME}] [env=${ENVIRONMENT}] [requestId=%X{requestId}] [user=%X{userEmail}] [method=%X{httpMethod}] [path=%X{httpPath}] %logger{36} - %msg%n%throwable</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <RollingFile
+                name="RollingFile"
+                fileName="${LOG_FILE}"
+                filePattern="${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz">
+
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="org.springframework" level="INFO"/>
+        <Logger name="org.hibernate" level="WARN"/>
+        <Logger name="org.flywaydb" level="INFO"/>
+        <Logger name="com.zaxxer.hikari" level="INFO"/>
+
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>
