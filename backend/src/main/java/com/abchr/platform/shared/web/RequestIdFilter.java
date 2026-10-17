@@ -55,7 +55,8 @@ public class RequestIdFilter extends OncePerRequestFilter {
         ThreadContext.put("httpPath", request.getRequestURI());
         long started = System.nanoTime();
         Throwable failure = null;
-        boolean capture = bodyLogging && !request.getRequestURI().startsWith("/actuator");
+        boolean capture = bodyLogging && !request.getRequestURI().startsWith("/actuator")
+                && !request.getRequestURI().endsWith("/notifications/stream");
         HttpServletRequest in = capture ? new ContentCachingRequestWrapper(request, HttpBodyLogger.MAX_BYTES) : request;
         HttpServletResponse out = capture ? new ContentCachingResponseWrapper(response) : response;
         if (!request.getRequestURI().startsWith("/actuator")) {

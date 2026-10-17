@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface CommissionRepository extends JpaRepository<Commission, UUID>, JpaSpecificationExecutor<Commission> {
 
     Optional<Commission> findByPlacementId(UUID placementId);
+
+    java.util.List<Commission> findByRecruiterUserIdAndStatus(UUID recruiterUserId, CommissionStatus status);
 }

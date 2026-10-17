@@ -59,20 +59,20 @@ public class AttendanceService {
         LocalDate today = LocalDate.now(zone);
         AttendanceSettings settings = settingsService.load();
         AttendanceCalendar.Context context = settingsService.context(today, today,
-                leaveService.leavesFor(userId, today, today));
+                leaveService.leaveDaysFor(userId, today, today));
         String type = AttendanceCalendar.dayType(today, context);
         Attendance record = repository.findByUserIdAndWorkDate(userId, today).orElse(null);
         String shift = settings.getShiftStart().toString().substring(0, 5);
-        LeaveEntry leave = context.leaves().get(today);
-        LeaveKind leaveKind = leave == null ? null : leave.getKind();
+        LeaveDay leave = context.leaves().get(today);
+        String leaveLabel = leave == null ? null : leave.label();
         String optional = context.optional().get(today);
         if (record == null) {
             return new TodayView(today, type, context.holidays().get(today), false, false, null, null, null, false,
-                    null, null, shift, optional, leaveKind);
+                    null, null, shift, optional, leaveLabel);
         }
         return new TodayView(today, type, context.holidays().get(today), record.getCheckIn() != null,
                 record.getCheckOut() != null, record.getCheckIn(), record.getCheckOut(), record.getWorkMode(),
-                record.isLate(), record.getWorkedMinutes(), record.getStatus(), shift, optional, leaveKind);
+                record.isLate(), record.getWorkedMinutes(), record.getStatus(), shift, optional, leaveLabel);
     }
 
     @Transactional
@@ -144,9 +144,15 @@ public class AttendanceService {
         }
         pending.addAll(leaveService.pendingDates(userId, from, to));
         AttendanceCalendar.Context context = settingsService.context(from, to,
-                leaveService.leavesFor(userId, from, to));
+                leaveService.leaveDaysFor(userId, from, to));
         java.util.List<DayView> days = AttendanceCalendar.month(ym, LocalDate.now(zone), records, context, pending);
         return new MonthView(ym.toString(), user.getFullName(), days, AttendanceCalendar.totals(days));
+    }
+
+    @Transactional(readOnly = true)
+    public AttendanceDtos.Totals totalsFrom(UUID userId, String month, LocalDate fromDate) {
+        MonthView view = monthFor(userId, month);
+        return AttendanceCalendar.totals(view.days().stream().filter(d -> !d.date().isBefore(fromDate)).toList());
     }
 
     YearMonth parse(String month) {

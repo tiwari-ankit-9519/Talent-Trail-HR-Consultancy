@@ -37,6 +37,7 @@ public class RegularizationService {
     private final UserRepository userRepository;
     private final AuditService auditService;
     private final LeaveService leaveService;
+    private final AttendanceNotifier notifier;
     private final ZoneId zone;
 
     public RegularizationService(
@@ -46,6 +47,7 @@ public class RegularizationService {
             UserRepository userRepository,
             AuditService auditService,
             LeaveService leaveService,
+            AttendanceNotifier notifier,
             @Value("${app.timezone:Asia/Kolkata}") String zoneId) {
         this.requestRepository = requestRepository;
         this.attendanceRepository = attendanceRepository;
@@ -53,6 +55,7 @@ public class RegularizationService {
         this.userRepository = userRepository;
         this.auditService = auditService;
         this.leaveService = leaveService;
+        this.notifier = notifier;
         this.zone = ZoneId.of(zoneId);
     }
 
@@ -83,6 +86,7 @@ public class RegularizationService {
         requestRepository.saveAndFlush(entity);
         auditService.record(AuditActions.ATTENDANCE_REQUEST_CREATED, AuditActions.ENTITY_ATTENDANCE_REQUEST,
                 entity.getId().toString(), "Requested attendance correction for " + entity.workDate, null);
+        notifier.correctionRequested(userId, "Correction for " + entity.workDate);
         return toView(entity, name(userId));
     }
 
@@ -125,6 +129,7 @@ public class RegularizationService {
         decide(entity, RequestStatus.APPROVED, request);
         auditService.record(AuditActions.ATTENDANCE_REQUEST_APPROVED, AuditActions.ENTITY_ATTENDANCE_REQUEST,
                 id.toString(), "Approved attendance correction for " + entity.workDate, null);
+        notifier.correctionDecided(entity.userId, true, "Correction for " + entity.workDate);
         return toView(entity, name(entity.userId));
     }
 
@@ -134,6 +139,7 @@ public class RegularizationService {
         decide(entity, RequestStatus.REJECTED, request);
         auditService.record(AuditActions.ATTENDANCE_REQUEST_REJECTED, AuditActions.ENTITY_ATTENDANCE_REQUEST,
                 id.toString(), "Rejected attendance correction for " + entity.workDate, null);
+        notifier.correctionDecided(entity.userId, false, "Correction for " + entity.workDate);
         return toView(entity, name(entity.userId));
     }
 

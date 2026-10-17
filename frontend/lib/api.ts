@@ -111,6 +111,26 @@ export async function api<T>(path: string, options: Options = {}): Promise<T> {
   return (text ? JSON.parse(text) : undefined) as T;
 }
 
+export async function openStream(path: string, signal: AbortSignal): Promise<Response> {
+  const send = () =>
+    fetch(base + path, {
+      headers: { Accept: "text/event-stream", ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}) },
+      credentials: "include",
+      cache: "no-store",
+      signal,
+    });
+  let response = await send();
+  if (response.status === 401) {
+    const session = await refreshSession();
+    if (!session) {
+      onSessionLost?.();
+      return response;
+    }
+    response = await send();
+  }
+  return response;
+}
+
 export async function login(email: string, password: string): Promise<Session> {
   const response = await fetch(`${base}/auth/login`, {
     method: "POST",

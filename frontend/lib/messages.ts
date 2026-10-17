@@ -41,5 +41,8 @@ export function formatDay(value: string | null | undefined): string {
 
 export function formatMoney(value: number | null | undefined): string {
   if (value === null || value === undefined) return "";
-  return `₹ ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 }).format(value)}`;
+  return `₹ ${new Intl.NumberFormat("en-IN", {
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(value)}`;
 }

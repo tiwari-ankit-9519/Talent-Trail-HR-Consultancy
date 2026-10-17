@@ -12,6 +12,9 @@ import {
   Coins,
   FileText,
   Handshake,
+  Activity,
+  Landmark,
+  ReceiptText,
   LayoutDashboard,
   Repeat2,
   ScrollText,
@@ -93,6 +96,7 @@ const groups: NavGroup[] = [
         icon: Coins,
         permissions: ["COMMISSIONS_VIEW", "COMMISSIONS_VIEW_OWN", "COMMISSIONS_MANAGE"],
       },
+      { href: "/payroll", label: "nav.payroll", icon: Landmark, permissions: ["PAYROLL_MANAGE"] },
     ],
   },
   {
@@ -117,6 +121,7 @@ const groups: NavGroup[] = [
         icon: ClipboardCheck,
         permissions: ["ATTENDANCE_MANAGE"],
       },
+      { href: "/payslips", label: "nav.payslips", icon: ReceiptText, permissions: ["PAYROLL_SELF", "PAYROLL_MANAGE"] },
     ],
   },
   {
@@ -126,6 +131,7 @@ const groups: NavGroup[] = [
       { href: "/roles", label: "nav.roles", icon: ShieldCheck, permissions: ["ROLES_VIEW", "ROLES_MANAGE"] },
       { href: "/settings", label: "nav.settings", icon: Settings, permissions: ["SETTINGS_MANAGE"] },
       { href: "/audit", label: "nav.audit", icon: ScrollText, permissions: ["AUDIT_VIEW"] },
+      { href: "/system", label: "nav.system", icon: Activity, permissions: ["SYSTEM_VIEW"] },
     ],
   },
 ];

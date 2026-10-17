@@ -31,38 +31,75 @@ public class LeaveService {
     static final List<LeaveStatus> ACTIVE = List.of(LeaveStatus.PENDING, LeaveStatus.APPROVED);
 
     private final LeaveEntryRepository leaveRepository;
+    private final LeaveApplicationRepository applicationRepository;
     private final CompOffRepository compOffRepository;
     private final AttendanceRepository attendanceRepository;
     private final AttendanceSettingsService settingsService;
     private final UserRepository userRepository;
     private final AuditService auditService;
+    private final AttendanceNotifier notifier;
     private final ZoneId zone;
 
     public LeaveService(
             LeaveEntryRepository leaveRepository,
+            LeaveApplicationRepository applicationRepository,
             CompOffRepository compOffRepository,
             AttendanceRepository attendanceRepository,
             AttendanceSettingsService settingsService,
             UserRepository userRepository,
             AuditService auditService,
+            AttendanceNotifier notifier,
             @Value("${app.timezone:Asia/Kolkata}") String zoneId) {
         this.leaveRepository = leaveRepository;
+        this.applicationRepository = applicationRepository;
         this.compOffRepository = compOffRepository;
         this.attendanceRepository = attendanceRepository;
         this.settingsService = settingsService;
         this.userRepository = userRepository;
         this.auditService = auditService;
+        this.notifier = notifier;
         this.zone = ZoneId.of(zoneId);
     }
 
     @Transactional(readOnly = true)
-    public Map<LocalDate, LeaveEntry> leavesFor(UUID userId, LocalDate from, LocalDate to) {
-        Map<LocalDate, LeaveEntry> map = new HashMap<>();
+    public Map<LocalDate, LeaveDay> leaveDaysFor(UUID userId, LocalDate from, LocalDate to) {
+        Map<LocalDate, LeaveDay> map = new HashMap<>();
         for (LeaveEntry entry : leaveRepository.findByUserIdAndLeaveDateBetweenAndStatusInOrderByLeaveDate(
                 userId, from, to, List.of(LeaveStatus.APPROVED))) {
-            map.put(entry.getLeaveDate(), entry);
+            map.put(entry.getLeaveDate(), new LeaveDay(label(entry), 1, false));
+        }
+        for (LeaveApplication application : applicationRepository
+                .findByUserIdAndStatusInAndFromDateLessThanEqualAndToDateGreaterThanEqual(
+                        userId, List.of(LeaveStatus.APPROVED), to, from)) {
+            addDays(map, application, from, to);
         }
         return map;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<UUID, Map<LocalDate, LeaveDay>> leaveDaysForAll(LocalDate from, LocalDate to) {
+        Map<UUID, Map<LocalDate, LeaveDay>> map = new HashMap<>();
+        for (LeaveEntry entry : leaveRepository.findByLeaveDateBetweenAndStatusOrderByLeaveDate(
+                from, to, LeaveStatus.APPROVED)) {
+            map.computeIfAbsent(entry.getUserId(), k -> new HashMap<>())
+                    .put(entry.getLeaveDate(), new LeaveDay(label(entry), 1, false));
+        }
+        for (LeaveApplication application : applicationRepository
+                .findByStatusInAndFromDateLessThanEqualAndToDateGreaterThanEqual(
+                        List.of(LeaveStatus.APPROVED), to, from)) {
+            addDays(map.computeIfAbsent(application.userId, k -> new HashMap<>()), application, from, to);
+        }
+        return map;
+    }
+
+    private static void addDays(Map<LocalDate, LeaveDay> target, LeaveApplication application, LocalDate from,
+            LocalDate to) {
+        double fraction = application.halfDay == null ? 1 : 0.5;
+        LocalDate day = application.fromDate.isBefore(from) ? from : application.fromDate;
+        LocalDate end = application.toDate.isAfter(to) ? to : application.toDate;
+        for (; !day.isAfter(end); day = day.plusDays(1)) {
+            target.put(day, new LeaveDay(application.typeName, fraction, application.unpaid));
+        }
     }
 
     @Transactional(readOnly = true)
@@ -72,17 +109,16 @@ public class LeaveService {
                 userId, from, to, List.of(LeaveStatus.PENDING))) {
             dates.add(entry.getLeaveDate());
         }
-        return dates;
-    }
-
-    @Transactional(readOnly = true)
-    public Map<UUID, Map<LocalDate, LeaveEntry>> leavesForAll(LocalDate from, LocalDate to) {
-        Map<UUID, Map<LocalDate, LeaveEntry>> map = new HashMap<>();
-        for (LeaveEntry entry : leaveRepository.findByLeaveDateBetweenAndStatusOrderByLeaveDate(
-                from, to, LeaveStatus.APPROVED)) {
-            map.computeIfAbsent(entry.getUserId(), k -> new HashMap<>()).put(entry.getLeaveDate(), entry);
+        for (LeaveApplication application : applicationRepository
+                .findByUserIdAndStatusInAndFromDateLessThanEqualAndToDateGreaterThanEqual(
+                        userId, List.of(LeaveStatus.PENDING), to, from)) {
+            LocalDate day = application.fromDate.isBefore(from) ? from : application.fromDate;
+            LocalDate end = application.toDate.isAfter(to) ? to : application.toDate;
+            for (; !day.isAfter(end); day = day.plusDays(1)) {
+                dates.add(day);
+            }
         }
-        return map;
+        return dates;
     }
 
     @Transactional(readOnly = true)
@@ -144,6 +180,7 @@ public class LeaveService {
                 LeaveEntry.create(userId, date, LeaveKind.OPTIONAL_HOLIDAY, holidayId, null));
         auditService.record(AuditActions.LEAVE_OPTIONAL_CLAIMED, AuditActions.ENTITY_LEAVE,
                 entry.getId().toString(), "Requested optional holiday " + holiday.getName() + " on " + date, null);
+        notifier.leaveRequested(userId, "Optional holiday " + holiday.getName() + " on " + date);
     }
 
     @Transactional
@@ -173,6 +210,7 @@ public class LeaveService {
                 LeaveEntry.create(userId, date, LeaveKind.COMP_OFF, null, credit.getId()));
         auditService.record(AuditActions.LEAVE_COMP_OFF_USED, AuditActions.ENTITY_LEAVE, entry.getId().toString(),
                 "Requested comp off earned on " + credit.earnedDate + " for " + date, null);
+        notifier.leaveRequested(userId, "Comp off on " + date);
     }
 
     @Transactional
@@ -193,6 +231,7 @@ public class LeaveService {
         releaseCredit(entry);
         auditService.record(AuditActions.LEAVE_CANCELLED, AuditActions.ENTITY_LEAVE, id.toString(),
                 "Cancelled " + entry.getKind() + " leave on " + entry.getLeaveDate(), null);
+        notifier.leaveCancelled(entry.getUserId(), label(entry) + " on " + entry.getLeaveDate());
     }
 
     @Transactional
@@ -202,6 +241,7 @@ public class LeaveService {
         auditService.record(AuditActions.LEAVE_APPROVED, AuditActions.ENTITY_LEAVE, id.toString(),
                 "Approved " + entry.getKind() + " leave on " + entry.getLeaveDate() + " for " + name(entry.getUserId()),
                 null);
+        notifier.leaveDecided(entry.getUserId(), true, label(entry) + " on " + entry.getLeaveDate());
     }
 
     @Transactional
@@ -212,6 +252,7 @@ public class LeaveService {
         auditService.record(AuditActions.LEAVE_REJECTED, AuditActions.ENTITY_LEAVE, id.toString(),
                 "Rejected " + entry.getKind() + " leave on " + entry.getLeaveDate() + " for " + name(entry.getUserId()),
                 null);
+        notifier.leaveDecided(entry.getUserId(), false, label(entry) + " on " + entry.getLeaveDate());
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,12 @@
 package com.abchr.platform.attendance;
 
+import com.abchr.platform.attendance.AttendanceDtos.ApplicationView;
+import com.abchr.platform.attendance.AttendanceDtos.ApplyRequest;
+import com.abchr.platform.attendance.AttendanceDtos.BalanceView;
 import com.abchr.platform.attendance.AttendanceDtos.CheckInRequest;
+import com.abchr.platform.attendance.AttendanceDtos.LeaveTypeRequest;
+import com.abchr.platform.attendance.AttendanceDtos.LeaveTypeView;
+import com.abchr.platform.attendance.AttendanceDtos.PreviewView;
 import com.abchr.platform.attendance.AttendanceDtos.ClaimRequest;
 import com.abchr.platform.attendance.AttendanceDtos.GrantCompOffRequest;
 import com.abchr.platform.attendance.AttendanceDtos.LeaveOverview;
@@ -49,18 +55,24 @@ public class AttendanceController {
     private final RegularizationService regularizationService;
     private final AttendanceSettingsService settingsService;
     private final LeaveService leaveService;
+    private final LeaveTypeService leaveTypeService;
+    private final LeaveApplicationService applicationService;
 
     public AttendanceController(
             AttendanceService service,
             AttendanceAdminService adminService,
             RegularizationService regularizationService,
             AttendanceSettingsService settingsService,
-            LeaveService leaveService) {
+            LeaveService leaveService,
+            LeaveTypeService leaveTypeService,
+            LeaveApplicationService applicationService) {
         this.service = service;
         this.adminService = adminService;
         this.regularizationService = regularizationService;
         this.settingsService = settingsService;
         this.leaveService = leaveService;
+        this.leaveTypeService = leaveTypeService;
+        this.applicationService = applicationService;
     }
 
     @GetMapping("/today")
@@ -173,6 +185,91 @@ public class AttendanceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeHoliday(@PathVariable UUID id) {
         settingsService.removeHoliday(id);
+    }
+
+    @GetMapping("/leave-types")
+    @PreAuthorize(SELF)
+    public List<LeaveTypeView> leaveTypes(@RequestParam(defaultValue = "true") boolean activeOnly) {
+        return leaveTypeService.list(activeOnly && !com.abchr.platform.shared.security.Permissions
+                .hasAny("ATTENDANCE_MANAGE"));
+    }
+
+    @PostMapping("/leave-types")
+    @PreAuthorize(MANAGE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public LeaveTypeView createLeaveType(@Valid @RequestBody LeaveTypeRequest request) {
+        return leaveTypeService.create(request);
+    }
+
+    @PutMapping("/leave-types/{id}")
+    @PreAuthorize(MANAGE)
+    public LeaveTypeView updateLeaveType(@PathVariable UUID id, @Valid @RequestBody LeaveTypeRequest request) {
+        return leaveTypeService.update(id, request);
+    }
+
+    @DeleteMapping("/leave-types/{id}")
+    @PreAuthorize(MANAGE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLeaveType(@PathVariable UUID id) {
+        leaveTypeService.delete(id);
+    }
+
+    @GetMapping("/leave/balances")
+    @PreAuthorize(SELF)
+    public List<BalanceView> leaveBalances(@RequestParam(required = false) Integer year) {
+        return applicationService.balances(year);
+    }
+
+    @GetMapping("/leave/applications/preview")
+    @PreAuthorize(SELF)
+    public PreviewView previewApplication(
+            @RequestParam UUID leaveTypeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            @RequestParam(required = false) HalfDay halfDay) {
+        return applicationService.preview(leaveTypeId, fromDate, toDate, halfDay);
+    }
+
+    @GetMapping("/leave/applications/mine")
+    @PreAuthorize(SELF)
+    public List<ApplicationView> myApplications() {
+        return applicationService.mine();
+    }
+
+    @PostMapping("/leave/applications")
+    @PreAuthorize(SELF)
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApplicationView apply(@Valid @RequestBody ApplyRequest request) {
+        return applicationService.apply(request);
+    }
+
+    @DeleteMapping("/leave/applications/{id}")
+    @PreAuthorize(SELF)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelApplication(@PathVariable UUID id) {
+        applicationService.cancel(id);
+    }
+
+    @GetMapping("/leave/applications")
+    @PreAuthorize(APPROVE)
+    public List<ApplicationView> applications(@RequestParam(required = false) LeaveStatus status) {
+        return applicationService.requests(status);
+    }
+
+    @PostMapping("/leave/applications/{id}/approve")
+    @PreAuthorize(APPROVE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void approveApplication(@PathVariable UUID id,
+            @Valid @RequestBody(required = false) DecisionRequest request) {
+        applicationService.approve(id, request == null ? null : request.note());
+    }
+
+    @PostMapping("/leave/applications/{id}/reject")
+    @PreAuthorize(APPROVE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void rejectApplication(@PathVariable UUID id,
+            @Valid @RequestBody(required = false) DecisionRequest request) {
+        applicationService.reject(id, request == null ? null : request.note());
     }
 
     @GetMapping("/leave/overview")

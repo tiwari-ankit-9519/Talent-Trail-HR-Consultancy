@@ -24,7 +24,7 @@ public class HttpBodyLogger {
     private static final String REDACTED = "[REDACTED]";
     private static final String[] SENSITIVE = {
         "password", "passwd", "token", "authorization", "secret", "apikey", "gstin", "aadhaar", "aadhar",
-        "pan", "email", "phone", "mobile", "dateofbirth", "dob", "salary", "ctc"
+        "pan", "email", "phone", "mobile", "dateofbirth", "dob", "salary", "ctc", "gross", "basic", "hra", "tds", "allowance"
     };
 
     private final ObjectMapper objectMapper;

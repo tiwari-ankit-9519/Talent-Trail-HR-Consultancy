@@ -66,7 +66,9 @@ public final class AttendanceDtos {
             boolean pendingRequest,
             String note,
             String optionalHolidayName,
-            LeaveKind leaveKind) {
+            String leaveLabel,
+            double leaveFraction,
+            boolean leaveUnpaid) {
     }
 
     public record Totals(
@@ -77,7 +79,8 @@ public final class AttendanceDtos {
             int wfh,
             int holidays,
             int weeklyOffs,
-            int leaves,
+            double leaves,
+            double lossOfPay,
             int workedMinutes,
             double payableDays) {
     }
@@ -99,7 +102,7 @@ public final class AttendanceDtos {
             AttendanceStatus status,
             String shiftStart,
             String optionalHolidayName,
-            LeaveKind leaveKind) {
+            String leaveLabel) {
     }
 
     public record TeamRow(
@@ -216,5 +219,62 @@ public final class AttendanceDtos {
             @NotNull UUID userId,
             @NotNull LocalDate earnedDate,
             @Size(max = 300) String note) {
+    }
+
+    public record LeaveTypeView(
+            UUID id,
+            String name,
+            double yearlyDays,
+            boolean unpaid,
+            boolean active,
+            int sortOrder,
+            Long version) {
+    }
+
+    public record LeaveTypeRequest(
+            @NotBlank @Size(max = 60) String name,
+            @NotNull @Min(0) @Max(365) Double yearlyDays,
+            boolean unpaid,
+            boolean active,
+            Long version) {
+    }
+
+    public record BalanceView(
+            UUID leaveTypeId,
+            String name,
+            boolean unpaid,
+            double yearlyDays,
+            double used,
+            double remaining) {
+    }
+
+    public record ApplyRequest(
+            @NotNull UUID leaveTypeId,
+            @NotNull LocalDate fromDate,
+            @NotNull LocalDate toDate,
+            HalfDay halfDay,
+            @NotBlank @Size(max = 500) String reason) {
+    }
+
+    public record PreviewView(double days, Double remaining, boolean unpaid, boolean enough) {
+    }
+
+    public record ApplicationView(
+            UUID id,
+            UUID userId,
+            String userName,
+            UUID leaveTypeId,
+            String typeName,
+            boolean unpaid,
+            LocalDate fromDate,
+            LocalDate toDate,
+            HalfDay halfDay,
+            double days,
+            String reason,
+            LeaveStatus status,
+            String decidedBy,
+            String decisionNote,
+            Instant createdAt,
+            Long version) {
     }
 }

@@ -2,11 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import CorrectionForm from "@/components/attendance/CorrectionForm";
+import HolidayCalendar from "@/components/attendance/HolidayCalendar";
 import LeavePanel from "@/components/attendance/LeavePanel";
 import MonthCalendar from "@/components/attendance/MonthCalendar";
 import MyRequests from "@/components/attendance/MyRequests";
 import TodayCard from "@/components/attendance/TodayCard";
 import { Button } from "@/components/shadcn/button";
+import { useLive } from "@/components/LiveProvider";
+import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { ErrorBanner, Loading } from "@/components/ui";
 import { api } from "@/lib/api";
 import { currentMonthKey } from "@/lib/attendance";
@@ -20,6 +23,7 @@ export default function AttendanceView() {
   const [requests, setRequests] = useState<AttendanceCorrection[]>([]);
   const [presetDate, setPresetDate] = useState("");
   const [showCorrection, setShowCorrection] = useState(false);
+  const [tab, setTab] = useState("attendance");
   const [leaveKey, setLeaveKey] = useState(0);
   const [error, setError] = useState<unknown>(null);
 
@@ -57,6 +61,13 @@ export default function AttendanceView() {
     void loadMonth();
   }, [loadMonth]);
 
+  useLive(["leave", "correction"], () => {
+    void loadToday();
+    void loadMonth();
+    void loadRequests();
+    setLeaveKey((value) => value + 1);
+  });
+
   function pick(day: AttendanceDay) {
     setPresetDate(day.date);
     setShowCorrection(true);
@@ -72,40 +83,58 @@ export default function AttendanceView() {
       </div>
       <ErrorBanner error={error} />
       {!today && !error && <Loading />}
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-        {today && (
-          <TodayCard
-            today={today}
-            onChange={(next) => {
-              setToday(next);
-              void loadMonth();
-              setLeaveKey((value) => value + 1);
-            }}
-          />
-        )}
-        <LeavePanel
-          refreshKey={leaveKey}
-          onChanged={() => {
-            void loadMonth();
-            void loadToday();
-          }}
-        />
-      </div>
-      {showCorrection && (
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList>
+          <TabsTrigger value="attendance">{t("attendance.tabs.attendance")}</TabsTrigger>
+          <TabsTrigger value="leave">{t("attendance.tabs.leave")}</TabsTrigger>
+          <TabsTrigger value="holidays">{t("attendance.tabs.holidays")}</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {tab === "attendance" && (
+        <>
+          {today && (
+            <TodayCard
+              today={today}
+              onChange={(next) => {
+                setToday(next);
+                void loadMonth();
+                setLeaveKey((value) => value + 1);
+              }}
+            />
+          )}
+          {showCorrection && (
+            <div className="mt-4">
+              <CorrectionForm
+                presetDate={presetDate}
+                onCreated={() => {
+                  void loadRequests();
+                  void loadMonth();
+                }}
+              />
+            </div>
+          )}
+          <div className="mt-4">
+            <MonthCalendar data={month} monthKey={monthKey} onMonthChange={setMonthKey} onPick={pick} />
+          </div>
+          <MyRequests rows={requests} />
+        </>
+      )}
+      {tab === "leave" && (
         <div className="mt-4">
-          <CorrectionForm
-            presetDate={presetDate}
-            onCreated={() => {
-              void loadRequests();
+          <LeavePanel
+            refreshKey={leaveKey}
+            onChanged={() => {
               void loadMonth();
+              void loadToday();
             }}
           />
         </div>
       )}
-      <div className="mt-4">
-        <MonthCalendar data={month} monthKey={monthKey} onMonthChange={setMonthKey} onPick={pick} />
-      </div>
-      <MyRequests rows={requests} />
+      {tab === "holidays" && (
+        <div className="mt-4">
+          <HolidayCalendar />
+        </div>
+      )}
     </section>
   );
 }

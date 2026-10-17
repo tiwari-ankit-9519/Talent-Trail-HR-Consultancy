@@ -19,9 +19,9 @@ final class AttendanceCalendar {
             Map<LocalDate, String> holidays,
             Map<LocalDate, String> optional,
             Set<DayOfWeek> weeklyOff,
-            Map<LocalDate, LeaveEntry> leaves) {
+            Map<LocalDate, LeaveDay> leaves) {
 
-        Context withLeaves(Map<LocalDate, LeaveEntry> other) {
+        Context withLeaves(Map<LocalDate, LeaveDay> other) {
             return new Context(holidays, optional, weeklyOff, other);
         }
     }
@@ -47,7 +47,8 @@ final class AttendanceCalendar {
         if (!"WORKING".equals(type)) {
             return type;
         }
-        if (context.leaves().containsKey(date)) {
+        LeaveDay leave = context.leaves().get(date);
+        if (leave != null && leave.fraction() >= 1) {
             return "LEAVE";
         }
         if (date.isAfter(today)) {
@@ -69,7 +70,7 @@ final class AttendanceCalendar {
         for (int i = 1; i <= month.lengthOfMonth(); i++) {
             LocalDate date = month.atDay(i);
             Attendance record = records.get(date);
-            LeaveEntry leave = context.leaves().get(date);
+            LeaveDay leave = context.leaves().get(date);
             days.add(new DayView(
                     date,
                     state(record, context, date, today),
@@ -82,7 +83,9 @@ final class AttendanceCalendar {
                     pending.contains(date),
                     record == null ? null : record.getNote(),
                     context.optional().get(date),
-                    leave == null ? null : leave.getKind()));
+                    leave == null ? null : leave.label(),
+                    leave == null ? 0 : leave.fraction(),
+                    leave != null && leave.unpaid()));
         }
         return days;
     }
@@ -95,31 +98,49 @@ final class AttendanceCalendar {
         int wfh = 0;
         int holidays = 0;
         int offs = 0;
-        int leaves = 0;
+        double leaves = 0;
+        double lossOfPay = 0;
+        double payable = 0;
         int minutes = 0;
         for (DayView day : days) {
-            switch (day.state()) {
+            String state = day.state();
+            switch (state) {
                 case "PRESENT" -> present++;
                 case "HALF_DAY" -> half++;
                 case "ABSENT" -> absent++;
                 case "HOLIDAY" -> holidays++;
                 case "WEEKLY_OFF" -> offs++;
-                case "LEAVE" -> leaves++;
                 default -> {
                 }
             }
             if (day.late()) {
                 late++;
             }
-            if (day.workMode() == WorkMode.WFH && !"ABSENT".equals(day.state())) {
+            if (day.workMode() == WorkMode.WFH && !"ABSENT".equals(state)) {
                 wfh++;
             }
             if (day.workedMinutes() != null) {
                 minutes += day.workedMinutes();
             }
+            double fraction = day.leaveFraction();
+            boolean offDay = "HOLIDAY".equals(state) || "WEEKLY_OFF".equals(state);
+            boolean leaveApplies = fraction > 0 && !offDay && (fraction < 1 || "LEAVE".equals(state));
+            double work = "PRESENT".equals(state) ? 1 : "HALF_DAY".equals(state) ? 0.5 : 0;
+            if (leaveApplies) {
+                if (day.leaveUnpaid()) {
+                    lossOfPay += fraction;
+                } else {
+                    leaves += fraction;
+                    payable += fraction;
+                }
+                payable += Math.min(work, 1 - fraction);
+            } else if (offDay) {
+                payable += 1;
+            } else {
+                payable += work;
+            }
         }
-        double payable = present + half * 0.5 + holidays + offs + leaves;
-        return new Totals(present, half, absent, late, wfh, holidays, offs, leaves, minutes, payable);
+        return new Totals(present, half, absent, late, wfh, holidays, offs, leaves, lossOfPay, minutes, payable);
     }
 
     static Instant at(LocalDate date, LocalTime time, ZoneId zone) {

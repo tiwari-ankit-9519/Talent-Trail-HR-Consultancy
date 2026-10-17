@@ -50,9 +50,12 @@ function Cell({ day, today, onPick }: { day: AttendanceDay; today: string; onPic
   const tone = tones[day.state] ?? plain;
   const pickable = Boolean(onPick) && day.date <= today;
   const hidden = day.state === "UPCOMING" || day.state === "NONE";
+  const leaveText = day.leaveLabel ? `${day.leaveLabel}${day.leaveFraction < 1 ? " ½" : ""}` : null;
   const label = hidden
-    ? (day.optionalHolidayName ?? "")
-    : (day.holidayName ?? tx(`enums.attendanceState.${day.state}`));
+    ? (leaveText ?? day.optionalHolidayName ?? "")
+    : day.state === "LEAVE" || (leaveText && day.leaveFraction < 1)
+      ? (leaveText ?? "")
+      : (day.holidayName ?? tx(`enums.attendanceState.${day.state}`));
   const content = (
     <>
       <span className="flex items-center justify-between gap-1">
@@ -131,6 +134,7 @@ export default function MonthCalendar({
         ["absent", totals.absent],
         ["late", totals.late],
         ["leaves", totals.leaves],
+        ["lossOfPay", totals.lossOfPay],
         ["wfh", totals.wfh],
         ["worked", formatMinutes(totals.workedMinutes)],
       ]

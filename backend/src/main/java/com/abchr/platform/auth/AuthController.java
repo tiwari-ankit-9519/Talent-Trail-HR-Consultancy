@@ -32,14 +32,17 @@ public class AuthController {
 
     private final AuthService authService;
     private final AppProperties properties;
+    private final AuthRateLimiter rateLimiter;
 
-    public AuthController(AuthService authService, AppProperties properties) {
+    public AuthController(AuthService authService, AppProperties properties, AuthRateLimiter rateLimiter) {
         this.authService = authService;
         this.properties = properties;
+        this.rateLimiter = rateLimiter;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SessionResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<SessionResponse> login(HttpServletRequest http, @Valid @RequestBody LoginRequest request) {
+        rateLimiter.check("login", http.getRemoteAddr());
         return withCookie(authService.login(request.email(), request.password()));
     }
 
@@ -48,6 +51,7 @@ public class AuthController {
             HttpServletRequest http,
             @CookieValue(name = REFRESH_COOKIE, required = false) String refreshToken) {
         requireGuardHeader(http);
+        rateLimiter.check("refresh", http.getRemoteAddr());
         return withCookie(authService.refresh(refreshToken));
     }
 
@@ -68,7 +72,9 @@ public class AuthController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<SessionResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<SessionResponse> changePassword(
+            HttpServletRequest http, @Valid @RequestBody ChangePasswordRequest request) {
+        rateLimiter.check("password", http.getRemoteAddr());
         return withCookie(authService.changePassword(request.currentPassword(), request.newPassword()));
     }
 

@@ -91,12 +91,16 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family:
+    "Inter Variable",
+    Inter,
     system-ui,
     -apple-system,
     "Segoe UI",
     Roboto,
     sans-serif;
+  font-feature-settings: "cv11", "ss01";
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 .home {
@@ -818,4 +822,27 @@ body:has(.app-shell) .floating-theme {
   background:
     radial-gradient(60rem 24rem at 50% -8%, var(--blob-a), transparent),
     radial-gradient(40rem 24rem at 100% 100%, var(--blob-b), transparent), var(--bg);
+}
+
+#payslip-print-root {
+  display: none;
+}
+
+@media print {
+  body > *:not(#payslip-print-root) {
+    display: none !important;
+  }
+
+  #payslip-print-root {
+    display: block !important;
+    padding: 24px;
+    background: #fff;
+  }
+
+  .payslip-plain,
+  .payslip-plain * {
+    color: #111 !important;
+    background: transparent !important;
+    border-color: #bbb !important;
+  }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useLive } from "@/components/LiveProvider";
 import { Badge } from "@/components/shadcn/badge";
 import { Button } from "@/components/shadcn/button";
 import { FormSelect } from "@/components/shadcn/select";
@@ -31,6 +32,8 @@ export default function LeaveRequestsPanel() {
       setError(failure);
     }
   }, [status]);
+
+  useLive(["leave"], () => void load());
 
   useEffect(() => {
     void load();

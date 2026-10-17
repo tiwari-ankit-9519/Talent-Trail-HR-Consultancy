@@ -74,6 +74,7 @@ export default function SummaryPanel() {
               t("attendance.totals.holidays"),
               t("attendance.totals.weeklyOffs"),
               t("attendance.totals.leaves"),
+              t("attendance.totals.lossOfPay"),
               t("attendance.totals.worked"),
               t("attendance.summary.payable"),
             ]}
@@ -87,6 +88,7 @@ export default function SummaryPanel() {
               row.totals.holidays,
               row.totals.weeklyOffs,
               row.totals.leaves,
+              row.totals.lossOfPay,
               formatMinutes(row.totals.workedMinutes),
               row.totals.payableDays,
             ])}
@@ -110,6 +112,7 @@ export default function SummaryPanel() {
                 <TableHead>{t("attendance.totals.holidays")}</TableHead>
                 <TableHead>{t("attendance.totals.weeklyOffs")}</TableHead>
                 <TableHead>{t("attendance.totals.leaves")}</TableHead>
+                <TableHead>{t("attendance.totals.lossOfPay")}</TableHead>
                 <TableHead>{t("attendance.totals.worked")}</TableHead>
                 <TableHead>{t("attendance.summary.payable")}</TableHead>
                 <TableHead>{t("common.actions")}</TableHead>
@@ -129,6 +132,7 @@ export default function SummaryPanel() {
                   <TableCell>{row.totals.holidays}</TableCell>
                   <TableCell>{row.totals.weeklyOffs}</TableCell>
                   <TableCell>{row.totals.leaves}</TableCell>
+                  <TableCell>{row.totals.lossOfPay}</TableCell>
                   <TableCell>{formatMinutes(row.totals.workedMinutes)}</TableCell>
                   <TableCell className="font-semibold">{row.totals.payableDays}</TableCell>
                   <TableCell>

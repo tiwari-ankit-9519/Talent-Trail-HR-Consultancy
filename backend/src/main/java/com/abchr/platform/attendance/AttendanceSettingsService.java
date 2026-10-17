@@ -118,7 +118,7 @@ public class AttendanceSettingsService {
     }
 
     @Transactional(readOnly = true)
-    AttendanceCalendar.Context context(LocalDate from, LocalDate to, Map<LocalDate, LeaveEntry> leaves) {
+    AttendanceCalendar.Context context(LocalDate from, LocalDate to, Map<LocalDate, LeaveDay> leaves) {
         Map<LocalDate, String> national = new LinkedHashMap<>();
         Map<LocalDate, String> optional = new LinkedHashMap<>();
         for (Holiday holiday : holidayRepository.findByHolidayDateBetweenOrderByHolidayDate(from, to)) {

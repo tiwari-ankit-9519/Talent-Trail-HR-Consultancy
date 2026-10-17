@@ -37,7 +37,7 @@ function SelectContent({
         position={position}
         sideOffset={4}
         className={cn(
-          "animate-fade-in relative z-[60] max-h-72 min-w-[8rem] overflow-hidden rounded-lg border border-line bg-surface text-fg shadow-lg",
+          "animate-fade-in relative z-[80] max-h-72 min-w-[8rem] overflow-hidden rounded-lg border border-line bg-surface text-fg shadow-lg",
           position === "popper" && "w-[var(--radix-select-trigger-width)]",
           className,
         )}

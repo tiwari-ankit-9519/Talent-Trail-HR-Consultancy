@@ -130,6 +130,20 @@ public final class ErrorCodes {
     public static final String COMP_OFF_EXISTS = "COMP_OFF_EXISTS";
     public static final String LEAVE_CLOSED = "LEAVE_CLOSED";
     public static final String LEAVE_SELF_APPROVAL = "LEAVE_SELF_APPROVAL";
+    public static final String PAYROLL_NOT_FOUND = "PAYROLL_NOT_FOUND";
+    public static final String PAYROLL_LOCKED = "PAYROLL_LOCKED";
+    public static final String PAYROLL_MONTH_OPEN = "PAYROLL_MONTH_OPEN";
+    public static final String PAYROLL_MONTH_INVALID = "PAYROLL_MONTH_INVALID";
+    public static final String PAYROLL_NO_EMPLOYEES = "PAYROLL_NO_EMPLOYEES";
+    public static final String SALARY_STRUCTURE_INVALID = "SALARY_STRUCTURE_INVALID";
+    public static final String PAYSLIP_NOT_FOUND = "PAYSLIP_NOT_FOUND";
+    public static final String LEAVE_TYPE_NOT_FOUND = "LEAVE_TYPE_NOT_FOUND";
+    public static final String LEAVE_TYPE_EXISTS = "LEAVE_TYPE_EXISTS";
+    public static final String LEAVE_TYPE_IN_USE = "LEAVE_TYPE_IN_USE";
+    public static final String LEAVE_TYPE_INACTIVE = "LEAVE_TYPE_INACTIVE";
+    public static final String LEAVE_NO_WORKING_DAYS = "LEAVE_NO_WORKING_DAYS";
+    public static final String LEAVE_HALF_DAY_RANGE = "LEAVE_HALF_DAY_RANGE";
+    public static final String LEAVE_BALANCE_LOW = "LEAVE_BALANCE_LOW";
     public static final String RATE_LIMITED = "RATE_LIMITED";
 
     private ErrorCodes() {

@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/AuthProvider";
 import ConfirmHost from "@/components/ConfirmHost";
 import { t } from "@/lib/messages";
 import { themeScript } from "@/lib/theme-script";
+import "@fontsource-variable/inter";
 import "./globals.css";
 import "./tailwind.css";
 

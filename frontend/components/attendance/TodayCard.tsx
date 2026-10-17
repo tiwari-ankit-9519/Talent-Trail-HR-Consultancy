@@ -58,7 +58,7 @@ export default function TodayCard({
               {t("attendance.today.optionalDay").replace("{name}", today.optionalHolidayName)}
             </Badge>
           )}
-          {today.leaveKind && <Badge variant="accent">{tx(`enums.leaveKind.${today.leaveKind}`)}</Badge>}
+          {today.leaveLabel && <Badge variant="accent">{today.leaveLabel}</Badge>}
           {today.status && <StatusPill kind="attendanceState" value={today.status} />}
           {today.late && <Badge variant="warn">{t("attendance.late")}</Badge>}
           {today.workMode === "WFH" && <Badge variant="accent">{t("attendance.wfh")}</Badge>}

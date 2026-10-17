@@ -660,7 +660,7 @@ export type AttendanceToday = {
   status: AttendanceStatus | null;
   shiftStart: string;
   optionalHolidayName: string | null;
-  leaveKind: LeaveKind | null;
+  leaveLabel: string | null;
 };
 
 export type AttendanceDay = {
@@ -675,7 +675,9 @@ export type AttendanceDay = {
   pendingRequest: boolean;
   note: string | null;
   optionalHolidayName: string | null;
-  leaveKind: LeaveKind | null;
+  leaveLabel: string | null;
+  leaveFraction: number;
+  leaveUnpaid: boolean;
 };
 
 export type AttendanceTotals = {
@@ -687,6 +689,7 @@ export type AttendanceTotals = {
   holidays: number;
   weeklyOffs: number;
   leaves: number;
+  lossOfPay: number;
   workedMinutes: number;
   payableDays: number;
 };
@@ -811,4 +814,190 @@ export type LeaveRow = {
   decidedBy: string | null;
   decisionNote: string | null;
   createdAt: string;
+};
+
+export type HalfDay = "FIRST" | "SECOND";
+
+export type LeaveType = {
+  id: string;
+  name: string;
+  yearlyDays: number;
+  unpaid: boolean;
+  active: boolean;
+  sortOrder: number;
+  version: number;
+};
+
+export type LeaveBalance = {
+  leaveTypeId: string;
+  name: string;
+  unpaid: boolean;
+  yearlyDays: number;
+  used: number;
+  remaining: number;
+};
+
+export type LeavePreview = {
+  days: number;
+  remaining: number | null;
+  unpaid: boolean;
+  enough: boolean;
+};
+
+export type LeaveApplication = {
+  id: string;
+  userId: string;
+  userName: string;
+  leaveTypeId: string;
+  typeName: string;
+  unpaid: boolean;
+  fromDate: string;
+  toDate: string;
+  halfDay: HalfDay | null;
+  days: number;
+  reason: string;
+  status: LeaveStatus;
+  decidedBy: string | null;
+  decisionNote: string | null;
+  createdAt: string;
+  version: number;
+};
+
+export type NotificationItem = {
+  id: string;
+  topic: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  read: boolean;
+  createdAt: string;
+};
+
+export type NotificationFeed = {
+  unread: number;
+  items: NotificationItem[];
+};
+
+export type LivePayload = {
+  topic: string;
+  id: string | null;
+  title: string | null;
+  body: string | null;
+  link: string | null;
+  createdAt: string;
+};
+
+export type PayrollStructure = {
+  id: string;
+  userId: string;
+  effectiveFrom: string;
+  gross: number;
+  basic: number | null;
+  hra: number | null;
+  allowance: number | null;
+  pfApplicable: boolean;
+  ptApplicable: boolean;
+  note: string | null;
+  ctcAnnual: number | null;
+  variablePercent: number | null;
+  variableAnnual: number | null;
+  employerPf: number | null;
+  gratuity: number | null;
+  version: number;
+};
+
+export type PayrollBreakdown = {
+  ctcAnnual: number;
+  variablePercent: number;
+  variableAnnual: number;
+  fixedAnnual: number;
+  gross: number;
+  basic: number;
+  hra: number;
+  allowance: number;
+  employerPf: number;
+  gratuity: number;
+};
+
+export type PayrollEmployee = {
+  userId: string;
+  name: string;
+  email: string;
+  active: boolean;
+  current: PayrollStructure | null;
+};
+
+export type PayrollSettings = {
+  pfEnabled: boolean;
+  pfRate: number;
+  pfWageCeiling: number;
+  ptAmount: number;
+  ptMinGross: number;
+  basicPercent: number;
+  hraPercent: number;
+  employerPfRate: number;
+  gratuityEnabled: boolean;
+  gratuityPercent: number;
+  version: number;
+};
+
+export type PayrollRunStatus = "DRAFT" | "FINALIZED";
+
+export type PayrollRun = {
+  id: string;
+  month: string;
+  status: PayrollRunStatus;
+  finalizedBy: string | null;
+  finalizedAt: string | null;
+  employees: number;
+  totalGross: number;
+  totalDeductions: number;
+  totalNet: number;
+  version: number;
+};
+
+export type PayslipCommission = { commissionId: string; amount: number; label: string };
+
+export type Payslip = {
+  id: string;
+  runId: string;
+  month: string;
+  status: PayrollRunStatus;
+  userId: string;
+  employeeName: string;
+  employeeEmail: string;
+  calendarDays: number;
+  payableDays: number;
+  leaveDays: number;
+  lossOfPayDays: number;
+  gross: number;
+  earnedGross: number;
+  basic: number | null;
+  hra: number | null;
+  allowance: number | null;
+  commission: number;
+  otherEarnings: number;
+  earningsNote: string | null;
+  pf: number;
+  pt: number;
+  tds: number;
+  otherDeductions: number;
+  deductionsNote: string | null;
+  totalEarnings: number;
+  totalDeductions: number;
+  net: number;
+  commissions: PayslipCommission[];
+  version: number;
+};
+
+export type PayrollDetail = { run: PayrollRun; payslips: Payslip[] };
+
+export type SystemCheck = { key: string; ok: boolean; detail: string };
+
+export type SystemHealth = {
+  healthy: boolean;
+  checkedAt: string;
+  startedAt: string;
+  liveConnections: number;
+  checks: SystemCheck[];
 };

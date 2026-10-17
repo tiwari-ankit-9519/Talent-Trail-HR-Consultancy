@@ -110,6 +110,24 @@ public final class AuditActions {
     public static final String ENTITY_LEAVE = "ENTITY_LEAVE";
     public static final String ENTITY_COMP_OFF = "ENTITY_COMP_OFF";
     public static final String LEAVE_APPROVED = "LEAVE_APPROVED";
+    public static final String PAYROLL_SETTINGS_UPDATED = "PAYROLL_SETTINGS_UPDATED";
+    public static final String SALARY_STRUCTURE_SET = "SALARY_STRUCTURE_SET";
+    public static final String PAYROLL_GENERATED = "PAYROLL_GENERATED";
+    public static final String PAYROLL_FINALIZED = "PAYROLL_FINALIZED";
+    public static final String PAYSLIP_ADJUSTED = "PAYSLIP_ADJUSTED";
+    public static final String ENTITY_PAYROLL_SETTINGS = "ENTITY_PAYROLL_SETTINGS";
+    public static final String ENTITY_SALARY_STRUCTURE = "ENTITY_SALARY_STRUCTURE";
+    public static final String ENTITY_PAYROLL_RUN = "ENTITY_PAYROLL_RUN";
+    public static final String ENTITY_PAYSLIP = "ENTITY_PAYSLIP";
+    public static final String LEAVE_TYPE_CREATED = "LEAVE_TYPE_CREATED";
+    public static final String LEAVE_TYPE_UPDATED = "LEAVE_TYPE_UPDATED";
+    public static final String LEAVE_TYPE_DELETED = "LEAVE_TYPE_DELETED";
+    public static final String LEAVE_APPLIED = "LEAVE_APPLIED";
+    public static final String LEAVE_APPLICATION_APPROVED = "LEAVE_APPLICATION_APPROVED";
+    public static final String LEAVE_APPLICATION_REJECTED = "LEAVE_APPLICATION_REJECTED";
+    public static final String LEAVE_APPLICATION_CANCELLED = "LEAVE_APPLICATION_CANCELLED";
+    public static final String ENTITY_LEAVE_TYPE = "ENTITY_LEAVE_TYPE";
+    public static final String ENTITY_LEAVE_APPLICATION = "ENTITY_LEAVE_APPLICATION";
     public static final String LEAVE_REJECTED = "LEAVE_REJECTED";
     public static final String ENTITY_REQUEST = "REQUEST";
 

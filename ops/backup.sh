@@ -18,6 +18,9 @@ run_backup() {
   fi
   find "$BACKUP_DIR" -type f \( -name 'db-*.dump' -o -name 'files-*.tar.gz' \) -mtime +"$RETENTION_DAYS" -delete
   echo "backup $stamp complete"
+  if [ -n "${BACKUP_HEARTBEAT_URL:-}" ]; then
+    wget -q -T 10 -O /dev/null "$BACKUP_HEARTBEAT_URL" || echo "heartbeat ping failed" >&2
+  fi
 }
 
 seconds_until_run() {

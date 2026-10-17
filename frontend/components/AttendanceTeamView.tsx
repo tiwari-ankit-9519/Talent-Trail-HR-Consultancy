@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import LeaveTypesPanel from "@/components/attendance/LeaveTypesPanel";
 import LeaveTeamPanel from "@/components/attendance/LeaveTeamPanel";
 import RequestsPanel from "@/components/attendance/RequestsPanel";
 import RulesPanel from "@/components/attendance/RulesPanel";
@@ -9,7 +10,7 @@ import TeamDayPanel from "@/components/attendance/TeamDayPanel";
 import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { t } from "@/lib/messages";
 
-type Tab = "day" | "summary" | "requests" | "leave" | "rules";
+type Tab = "day" | "summary" | "requests" | "leave" | "types" | "rules";
 
 export default function AttendanceTeamView() {
   const [tab, setTab] = useState<Tab>("day");
@@ -25,6 +26,7 @@ export default function AttendanceTeamView() {
           <TabsTrigger value="summary">{t("attendance.team.tabs.summary")}</TabsTrigger>
           <TabsTrigger value="requests">{t("attendance.team.tabs.requests")}</TabsTrigger>
           <TabsTrigger value="leave">{t("attendance.team.tabs.leave")}</TabsTrigger>
+          <TabsTrigger value="types">{t("attendance.team.tabs.types")}</TabsTrigger>
           <TabsTrigger value="rules">{t("attendance.team.tabs.rules")}</TabsTrigger>
         </TabsList>
       </Tabs>
@@ -32,6 +34,7 @@ export default function AttendanceTeamView() {
       {tab === "summary" && <SummaryPanel />}
       {tab === "requests" && <RequestsPanel />}
       {tab === "leave" && <LeaveTeamPanel />}
+      {tab === "types" && <LeaveTypesPanel />}
       {tab === "rules" && <RulesPanel />}
     </section>
   );

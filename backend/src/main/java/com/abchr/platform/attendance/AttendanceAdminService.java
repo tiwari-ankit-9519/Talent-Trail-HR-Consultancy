@@ -57,7 +57,7 @@ public class AttendanceAdminService {
     public TeamDay team(LocalDate date) {
         LocalDate day = date == null ? LocalDate.now(zone) : date;
         LocalDate today = LocalDate.now(zone);
-        Map<UUID, Map<LocalDate, LeaveEntry>> allLeaves = leaveService.leavesForAll(day, day);
+        Map<UUID, Map<LocalDate, LeaveDay>> allLeaves = leaveService.leaveDaysForAll(day, day);
         AttendanceCalendar.Context base = settingsService.context(day, day, Map.of());
         String type = AttendanceCalendar.dayType(day, base);
         Map<UUID, Attendance> records = new HashMap<>();
@@ -124,7 +124,7 @@ public class AttendanceAdminService {
         LocalDate to = ym.atEndOfMonth();
         LocalDate today = LocalDate.now(zone);
         AttendanceCalendar.Context base = settingsService.context(from, to, Map.of());
-        Map<UUID, Map<LocalDate, LeaveEntry>> allLeaves = leaveService.leavesForAll(from, to);
+        Map<UUID, Map<LocalDate, LeaveDay>> allLeaves = leaveService.leaveDaysForAll(from, to);
         Map<UUID, Map<LocalDate, Attendance>> byUser = new HashMap<>();
         for (Attendance a : repository.findByWorkDateBetween(from, to)) {
             byUser.computeIfAbsent(a.getUserId(), k -> new HashMap<>()).put(a.getWorkDate(), a);

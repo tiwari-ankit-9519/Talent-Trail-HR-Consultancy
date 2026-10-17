@@ -24,7 +24,8 @@
     "no": "No",
     "showing": "Showing {from} to {to} of {total}",
     "pageOf": "Page {page} of {pages}",
-    "page": "Page"
+    "page": "Page",
+    "close": "Close"
   },
   "nav": {
     "label": "Main navigation",
@@ -56,7 +57,10 @@
     "reports": "Reports",
     "attendance": "My attendance",
     "teamAttendance": "Team attendance",
-    "leaveApprovals": "Leave approvals"
+    "leaveApprovals": "Leave approvals",
+    "payroll": "Payroll",
+    "payslips": "My payslips",
+    "system": "System health"
   },
   "login": {
     "heading": "Sign in",
@@ -263,7 +267,7 @@
     "APPLICATION_NOT_FOUND": "Application not found.",
     "RESUME_INVALID": "The resume must be a valid PDF, DOC or DOCX file.",
     "RESUME_NOT_FOUND": "Resume not found.",
-    "RATE_LIMITED": "Too many applications from this connection. Please try again later.",
+    "RATE_LIMITED": "Too many attempts from this connection. Please try again later.",
     "NETWORK": "Cannot reach the server. Check your connection and try again.",
     "HTTP_400": "The request was not accepted. Please check what you entered.",
     "HTTP_401": "Please sign in again.",
@@ -361,7 +365,21 @@
     "COMP_OFF_NONE": "You have no comp off available for that date.",
     "COMP_OFF_EXISTS": "A comp off already exists for that date.",
     "LEAVE_CLOSED": "This leave request is already closed.",
-    "LEAVE_SELF_APPROVAL": "You cannot decide your own leave request. Ask another approver."
+    "LEAVE_SELF_APPROVAL": "You cannot decide your own leave request. Ask another approver.",
+    "LEAVE_TYPE_NOT_FOUND": "That leave type no longer exists.",
+    "LEAVE_TYPE_EXISTS": "A leave type with this name already exists.",
+    "LEAVE_TYPE_IN_USE": "This leave type has been used. Mark it as not available instead of deleting it.",
+    "LEAVE_TYPE_INACTIVE": "This leave type is not available.",
+    "LEAVE_NO_WORKING_DAYS": "There are no working days in the selected dates.",
+    "LEAVE_HALF_DAY_RANGE": "A half day can only be taken for a single date.",
+    "LEAVE_BALANCE_LOW": "You do not have enough balance. Choose Loss of pay for the remaining days.",
+    "PAYROLL_NOT_FOUND": "Payroll has not been calculated for that month.",
+    "PAYROLL_LOCKED": "This month is finalized and cannot be changed.",
+    "PAYROLL_MONTH_OPEN": "The month must be over before it can be finalized.",
+    "PAYROLL_MONTH_INVALID": "Choose a valid month that is not in the future.",
+    "PAYROLL_NO_EMPLOYEES": "No employee has a salary structure for this month yet.",
+    "SALARY_STRUCTURE_INVALID": "Check the basic and HRA amounts. Together they cannot be more than the gross.",
+    "PAYSLIP_NOT_FOUND": "That payslip was not found."
   },
   "jobs": {
     "heading": "Jobs",
@@ -969,7 +987,10 @@
     "reports": "Reports",
     "attendance": "Attendance",
     "team": "Team",
-    "leave-requests": "Leave approvals"
+    "leave-requests": "Leave approvals",
+    "payroll": "Payroll",
+    "payslips": "My payslips",
+    "system": "System health"
   },
   "reports": {
     "heading": "Reports",
@@ -1116,7 +1137,8 @@
       "holidays": "Holidays",
       "weeklyOffs": "Weekly offs",
       "worked": "Hours worked",
-      "leaves": "Leave"
+      "leaves": "Leave",
+      "lossOfPay": "Loss of pay"
     },
     "correction": {
       "heading": "Request a correction",
@@ -1156,7 +1178,8 @@
         "summary": "Monthly summary",
         "requests": "Correction requests",
         "rules": "Rules and holidays",
-        "leave": "Leave and comp off"
+        "leave": "Leave and comp off",
+        "types": "Leave types"
       }
     },
     "rules": {
@@ -1200,7 +1223,10 @@
       "compOffHelp": "You earn a comp off by working on a weekly off or national holiday. Leave needs approval from your manager.",
       "myLeaves": "My upcoming leave",
       "cancelConfirm": "Cancel this leave?",
-      "request": "Request leave"
+      "request": "Request leave",
+      "balances": "Leave balances",
+      "taken": "days taken",
+      "myApplications": "My leave requests"
     },
     "leaveTeam": {
       "grantHeading": "Grant a comp off",
@@ -1214,7 +1240,57 @@
     },
     "leaveApprovals": {
       "heading": "Leave approvals",
-      "help": "Optional holiday and comp off requests waiting for a decision. You cannot decide your own request."
+      "help": "Leave applications, optional holiday and comp off requests waiting for a decision. You cannot decide your own request.",
+      "applications": "Leave applications",
+      "holidays": "Optional holidays and comp off"
+    },
+    "apply": {
+      "open": "Apply for leave",
+      "title": "Apply for leave",
+      "help": "Pick a leave type and dates. Weekly offs and national holidays are not counted. Your manager approves it.",
+      "type": "Leave type",
+      "unpaidTag": "Loss of pay",
+      "left": "{n} left",
+      "from": "From",
+      "to": "To",
+      "duration": "Duration",
+      "full": "Full day",
+      "first": "First half",
+      "second": "Second half",
+      "reason": "Reason",
+      "preview": "This request counts as {n} day(s).",
+      "previewLeft": "You have {n} day(s) left in this type.",
+      "previewUnpaid": "These days will not be paid.",
+      "previewShort": "Not enough balance. Choose Loss of pay for the rest.",
+      "submit": "Send request",
+      "daysCol": "Days",
+      "daysUnit": "day(s)"
+    },
+    "types": {
+      "help": "Leave types your staff can apply for. Yearly days are credited every January and do not carry forward. Loss of pay has no balance and is not paid.",
+      "add": "Add leave type",
+      "edit": "Edit leave type",
+      "dialogHelp": "Changes to yearly days apply to everyone straight away.",
+      "name": "Name",
+      "yearly": "Days per year",
+      "yearlyHint": "Half days are allowed, for example 7.5.",
+      "kind": "Kind",
+      "paid": "Paid",
+      "unpaid": "Loss of pay",
+      "unpaidLabel": "Unpaid leave (loss of pay, no balance)",
+      "activeLabel": "Available to staff",
+      "deleteConfirm": "Delete the leave type {name}?"
+    },
+    "tabs": {
+      "attendance": "Attendance",
+      "leave": "Leave",
+      "holidays": "Holiday calendar"
+    },
+    "holidayCalendar": {
+      "heading": "Holiday calendar",
+      "all": "All",
+      "counts": "{national} national, {optional} optional",
+      "none": "No holidays have been added for this year yet."
     }
   },
   "theme": {
@@ -1222,5 +1298,149 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "notifications": {
+    "label": "Notifications",
+    "heading": "Notifications",
+    "empty": "You are all caught up.",
+    "markAll": "Mark all read",
+    "view": "View",
+    "live": "Live updates on",
+    "offline": "Reconnecting"
+  },
+  "payroll": {
+    "heading": "Payroll",
+    "tabs": {
+      "runs": "Monthly payroll",
+      "structures": "Salary structures",
+      "rules": "Rules"
+    },
+    "run": {
+      "month": "Month",
+      "calculate": "Calculate payroll",
+      "recalculate": "Recalculate",
+      "finalize": "Finalize and lock",
+      "finalizeConfirm": "Finalize payroll for {month}? It is locked afterwards, commissions in it are marked paid and employees can see their payslips.",
+      "notCalculated": "Payroll has not been calculated for this month yet.",
+      "statusDraft": "Draft",
+      "statusFinalized": "Finalized",
+      "employees": "Employees",
+      "totalEarnings": "Total earnings",
+      "totalDeductions": "Total deductions",
+      "totalNet": "Net pay",
+      "draftHelp": "This is a draft. It uses attendance and leave up to now, so recalculate before finalizing. A month can be finalized once it is over.",
+      "employee": "Employee",
+      "payableDays": "Payable days",
+      "lossOfPay": "Loss of pay",
+      "earnedGross": "Earned pay",
+      "commission": "Commission and extras",
+      "deductions": "Deductions",
+      "net": "Net pay",
+      "view": "View",
+      "adjust": "Adjust"
+    },
+    "adjust": {
+      "title": "Adjust payslip of {name}",
+      "help": "Add a bonus or enter TDS and other deductions. Recalculating keeps these values.",
+      "otherEarnings": "Bonus or other earnings",
+      "earningsNote": "Earnings note",
+      "tds": "TDS",
+      "otherDeductions": "Other deductions",
+      "deductionsNote": "Deductions note"
+    },
+    "structures": {
+      "help": "Enter the yearly CTC and the variable share. Basic, HRA and special allowance are worked out for you using the Rules tab, after setting aside employer PF and gratuity. Revising adds a new entry from the date you choose, older months keep their earlier amounts.",
+      "ctc": "Annual CTC",
+      "variable": "Variable (yearly)",
+      "gross": "Monthly gross",
+      "breakup": "Basic / HRA / Allowance",
+      "since": "Effective from",
+      "notSet": "Not set",
+      "revise": "Revise",
+      "set": "Set salary",
+      "dialogTitle": "Salary of {name}",
+      "dialogHelp": "Everything below is calculated from the CTC.",
+      "effectiveFrom": "Effective from",
+      "ctcAnnual": "Annual CTC",
+      "variablePercent": "Variable share of CTC (%)",
+      "variableHint": "Not paid monthly. Add it as Bonus on the payslip when it is approved.",
+      "pfApplicable": "Provident fund applies",
+      "ptApplicable": "Professional tax applies",
+      "breakdown": "Calculated breakup",
+      "fixedAnnual": "Fixed CTC per year",
+      "variableAnnual": "Variable per year",
+      "grossMonthly": "Monthly gross",
+      "specialAllowance": "Special allowance",
+      "employerPf": "Employer PF (monthly, inside CTC)",
+      "gratuity": "Gratuity provision (monthly, inside CTC)",
+      "breakdownHelp": "Employer PF and gratuity are part of CTC but are not paid in the monthly salary.",
+      "note": "Note",
+      "history": "Earlier entries"
+    },
+    "rules": {
+      "help": "Statutory deductions used when payroll is calculated. Provident fund is taken on basic pay, with the same ceiling for employee and employer.",
+      "pfEnabled": "Deduct provident fund",
+      "pfRate": "Provident fund rate (%)",
+      "pfCeiling": "Provident fund wage ceiling",
+      "pfCeilingHint": "Use 0 for no ceiling",
+      "ptAmount": "Professional tax per month",
+      "ptMinGross": "Professional tax applies from gross",
+      "ptMinGrossHint": "Use 0 to apply to everyone",
+      "ctcHeading": "CTC split",
+      "ctcHelp": "Used to turn the fixed part of CTC into monthly pay. Changing these affects structures saved from now on, existing ones are not rewritten until they are revised.",
+      "basicPercent": "Basic (% of monthly gross)",
+      "hraPercent": "HRA (% of basic)",
+      "employerPfRate": "Employer PF rate (%)",
+      "gratuityPercent": "Gratuity (% of basic)",
+      "gratuityEnabled": "Include gratuity provision in CTC"
+    },
+    "payslip": {
+      "title": "Payslip for {month}",
+      "dialogTitle": "Payslip",
+      "dialogHelp": "Use Download PDF and choose Save as PDF in the print window.",
+      "download": "Download PDF",
+      "calendarDays": "Days in month",
+      "payableDays": "Payable days",
+      "leaveDays": "Paid leave days",
+      "lossOfPay": "Loss of pay days",
+      "earnings": "Earnings",
+      "deductions": "Deductions",
+      "basic": "Basic",
+      "hra": "HRA",
+      "allowance": "Allowance",
+      "grossEarned": "Earned pay",
+      "otherEarnings": "Other earnings",
+      "totalEarnings": "Total earnings",
+      "pf": "Provident fund",
+      "pt": "Professional tax",
+      "tds": "TDS",
+      "otherDeductions": "Other deductions",
+      "totalDeductions": "Total deductions",
+      "net": "Net pay",
+      "generated": "This is a computer generated payslip."
+    },
+    "mine": {
+      "heading": "My payslips"
+    }
+  },
+  "system": {
+    "heading": "System health",
+    "refresh": "Check now",
+    "help": "The server checks itself every few minutes. Admins get a notification and an email when something starts failing and again when it recovers. This page refreshes every 30 seconds.",
+    "overall": "Overall",
+    "healthy": "All good",
+    "attention": "Needs attention",
+    "started": "Server started",
+    "liveConnections": "Live connections",
+    "checkedAt": "Checked at {time}",
+    "checks": {
+      "database": "Database",
+      "rabbitmq": "Message queue (RabbitMQ)",
+      "redis": "Cache (Redis)",
+      "outboxBacklog": "Event backlog",
+      "outboxFailures": "Failed events",
+      "disk": "Disk space",
+      "memory": "Memory"
+    }
   }
 }

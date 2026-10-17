@@ -53,6 +53,10 @@ services:
       - internal
 
   backend:
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     build:
       context: ./backend
     restart: unless-stopped
@@ -80,6 +84,10 @@ services:
       - internal
 
   frontend:
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     build:
       context: ./frontend
       args:
@@ -93,6 +101,8 @@ services:
 
   proxy:
     image: caddy:2-alpine
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
     environment:
       DOMAIN: ${DOMAIN}
@@ -121,6 +131,7 @@ services:
       BACKUP_DIR: ${BACKUP_DIR:-/backups}
       BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
       FILES_DIR: /data/files
+      BACKUP_HEARTBEAT_URL: ${BACKUP_HEARTBEAT_URL:-}
     volumes:
       - ./ops/backup.sh:/ops/backup.sh:ro
       - filedata:/data/files:ro
@@ -131,10 +142,22 @@ services:
     networks:
       - internal
 
+  uptime:
+    image: louislam/uptime-kuma:1
+    profiles: ["monitoring"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${UPTIME_PORT:-3001}:3001"
+    volumes:
+      - uptimedata:/app/data
+    networks:
+      - internal
+
 networks:
   internal:
 
 volumes:
+  uptimedata:
   pgdata:
   redisdata:
   rabbitdata:

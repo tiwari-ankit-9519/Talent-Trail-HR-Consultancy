@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       ? [{ source: "/api/:path*", destination: `${backendUrl}/api/:path*` }]
       : [];
   },
+  devIndicators: false,
 };
 
 export default nextConfig;

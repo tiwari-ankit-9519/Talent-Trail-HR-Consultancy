@@ -206,6 +206,39 @@ public class CommissionService {
         return toView(c, today);
     }
 
+    public record PayableCommission(UUID id, BigDecimal amount, String label) {
+    }
+
+    @Transactional(readOnly = true)
+    public List<PayableCommission> payableFor(UUID recruiterUserId) {
+        LocalDate today = LocalDate.now(zone);
+        List<PayableCommission> out = new ArrayList<>();
+        for (Commission c : repository.findByRecruiterUserIdAndStatus(recruiterUserId, CommissionStatus.PENDING)) {
+            if (!blockers(c, today).isEmpty()) {
+                continue;
+            }
+            CommissionView view = toView(c, today);
+            out.add(new PayableCommission(c.getId(), c.amount,
+                    "Commission " + view.candidateName() + " (" + view.jobCode() + ")"));
+        }
+        return out;
+    }
+
+    @Transactional
+    public void payWithSalary(UUID id, LocalDate paidOn, String reference) {
+        Commission c = find(id);
+        requireOpen(c);
+        if (!blockers(c, LocalDate.now(zone)).isEmpty()) {
+            throw ApiException.rule(ErrorCodes.COMMISSION_INVOICE_UNPAID, "This commission is no longer payable");
+        }
+        c.status = CommissionStatus.PAID;
+        c.paidOn = paidOn;
+        c.paymentReference = reference;
+        repository.saveAndFlush(c);
+        auditService.record(AuditActions.COMMISSION_PAID, AuditActions.ENTITY_COMMISSION, id.toString(),
+                "Paid commission " + c.amount + " to " + c.recruiterName + " with salary", null);
+    }
+
     private void requireOpen(Commission c) {
         if (c.status != CommissionStatus.PENDING) {
             throw ApiException.rule(ErrorCodes.COMMISSION_CLOSED, "This commission is already paid or cancelled");

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useLive } from "@/components/LiveProvider";
 import { Button } from "@/components/shadcn/button";
 import { FormSelect } from "@/components/shadcn/select";
 import { Input } from "@/components/shadcn/input";
@@ -29,6 +30,8 @@ export default function RequestsPanel({ onDecided }: { onDecided?: () => void })
       setError(failure);
     }
   }, [status]);
+
+  useLive(["correction"], () => void load());
 
   useEffect(() => {
     void load();
