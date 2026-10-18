@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import com.abchr.platform.replacement.ReplacementStatus;
 import com.abchr.platform.shared.mail.EmailStatus;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -34,6 +35,12 @@ public final class PlacementDtos {
     public record JoinedRequest(@NotNull LocalDate joiningDate, Long version) {
     }
 
+    public record ExitInfo(ReplacementStatus status, LocalDate exitDate, String replacedByName) {
+    }
+
+    public record ReplacementOf(String candidateName, LocalDate exitDate) {
+    }
+
     public record PlacementSummary(
             UUID id,
             UUID submissionId,
@@ -48,7 +55,9 @@ public final class PlacementDtos {
             BigDecimal offeredCtc,
             LocalDate expectedJoiningDate,
             LocalDate joiningDate,
-            boolean joiningEmailAttached) {
+            boolean joiningEmailAttached,
+            ExitInfo exit,
+            ReplacementOf replacementOf) {
     }
 
     public record PlacementDetail(

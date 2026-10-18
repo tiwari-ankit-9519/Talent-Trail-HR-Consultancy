@@ -67,4 +67,24 @@ public class Replacement extends AuditableEntity {
     public UUID getId() {
         return id;
     }
+
+    public UUID getPlacementId() {
+        return placementId;
+    }
+
+    public UUID getCandidateId() {
+        return candidateId;
+    }
+
+    public LocalDate getExitDate() {
+        return exitDate;
+    }
+
+    public ReplacementStatus getStatus() {
+        return status;
+    }
+
+    public UUID getReplacementPlacementId() {
+        return replacementPlacementId;
+    }
 }

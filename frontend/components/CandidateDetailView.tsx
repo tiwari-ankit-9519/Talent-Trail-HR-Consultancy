@@ -17,8 +17,9 @@ import { Alert } from "@/components/shadcn/alert";
 import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { useBreadcrumbLabel } from "@/lib/breadcrumb";
 import StatusPill from "@/components/StatusPill";
+import Timeline from "@/components/Timeline";
 
-type Tab = "profile" | "consent" | "jobs";
+type Tab = "profile" | "consent" | "jobs" | "history";
 
 const statuses: CandidateStatus[] = ["NEW", "SCREENING", "AVAILABLE", "NOT_INTERESTED", "PLACED", "BLOCKED"];
 
@@ -116,6 +117,7 @@ export default function CandidateDetailView({ id }: { id: string }) {
           <TabsTrigger value="profile">{t("candidates.tabProfile")}</TabsTrigger>
           <TabsTrigger value="consent">{t("candidates.tabConsent")}</TabsTrigger>
           <TabsTrigger value="jobs">{t("candidates.tabJobs")}</TabsTrigger>
+          <TabsTrigger value="history">{t("candidates.tabHistory")}</TabsTrigger>
         </TabsList>
       </Tabs>
       {tab === "profile" && (
@@ -126,6 +128,7 @@ export default function CandidateDetailView({ id }: { id: string }) {
       )}
       {tab === "consent" && <CandidateConsent candidate={candidate} canManage={canManage} onChanged={replace} />}
       {tab === "jobs" && <CandidateApplications candidate={candidate} canManage={canManage} onChanged={replace} />}
+      {tab === "history" && <Timeline subject="CANDIDATE" id={candidate.id} />}
     </section>
   );
 }

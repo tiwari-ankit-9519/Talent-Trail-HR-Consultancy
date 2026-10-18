@@ -27,6 +27,7 @@ Values that must change for production:
 - `CORS_ALLOWED_ORIGINS`: `https://hr.example.com`
 - `DB_PASSWORD`, `REDIS_PASSWORD`, `RABBITMQ_PASSWORD`, `JWT_SECRET`, `FIELD_ENCRYPTION_KEY`: long random values
 - `LOG_LEVEL_*`, `HTTP_BODIES_ENABLED`: as needed
+- Business events: every non-security audit action (placements, invoices, payments, candidates, submissions, commissions, payroll) is also written as `EVENT <ACTION> <ENTITY>:<id> by <actor> - <summary>` to `logs/events.log` (`LOG_DIR`), kept 90 days, and to the normal log. Login and password events stay in the `audit` logger. Placement, invoice, candidate, submission and payroll run pages show a History card built from the audit data (`GET /api/v1/timeline/{PLACEMENT|INVOICE|CANDIDATE|SUBMISSION|COMMISSION|PAYROLL_RUN}/{id}`), limited to people who can view that record. Related records are merged, so a placement history includes its submission, interviews, invoices and commission.
 - SQL logging: every executed query is written at INFO to the `sql` logger with its duration and bound values (`SQL 3 ms select ... | params=[...]`). Queries over `SLOW_QUERY_MS` log as `SLOW SQL` at WARN, failures at ERROR. Values for statements touching passwords, tokens, hashes, bank, PAN or UAN are hidden and long values are truncated. Set `SQL_LOG_PARAMS=false` to omit values or `SQL_LOG_ENABLED=false` to turn it off. Each access line also shows `queries=N dbMs=M`, and a request running `MANY_QUERIES_THRESHOLD` or more queries logs a `MANY QUERIES` warning (a likely N+1). Keep `LOG_LEVEL_SQL` and `LOG_LEVEL_SQL_PARAMS` at INFO, otherwise Hibernate prints each query a second time.
 
 The backend refuses to start if a required value is missing or invalid.
@@ -85,17 +86,17 @@ Set `OFFSITE_ENABLED=false` (or remove it) and recreate the service to turn it o
 
 Settings:
 
-| Variable | Meaning |
-| --- | --- |
-| `OFFSITE_ENABLED` | `true` to upload, `false` to skip |
-| `OFFSITE_TYPE` | `s3` (default, works for AWS S3, Cloudflare R2, Backblaze B2, Wasabi, MinIO) or `sftp` |
-| `OFFSITE_PROVIDER` | S3 only: `Cloudflare`, `Backblaze`, `AWS`, `Wasabi` or `Other` |
-| `OFFSITE_ENDPOINT`, `OFFSITE_REGION` | S3 only, from your storage provider (leave the endpoint empty for AWS) |
-| `OFFSITE_ACCESS_KEY`, `OFFSITE_SECRET_KEY` | S3 only, an access key limited to one bucket |
-| `OFFSITE_PATH` | Bucket and folder, for example `talent-trail-backups/prod` (for SFTP, the folder on the server) |
-| `OFFSITE_RETENTION_DAYS` | Remote copies older than this are deleted (default 30) |
-| `OFFSITE_ENCRYPTION_PASSPHRASE` | Optional. Encrypts file contents before upload. Keep this passphrase somewhere safe: without it the remote copies cannot be read. |
-| `OFFSITE_SFTP_HOST`, `OFFSITE_SFTP_USER`, `OFFSITE_SFTP_PASS_OBSCURED` | SFTP only. Get the obscured password with `docker compose run --rm --entrypoint rclone backup obscure 'your-password'` |
+| Variable                                                               | Meaning                                                                                                                           |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `OFFSITE_ENABLED`                                                      | `true` to upload, `false` to skip                                                                                                 |
+| `OFFSITE_TYPE`                                                         | `s3` (default, works for AWS S3, Cloudflare R2, Backblaze B2, Wasabi, MinIO) or `sftp`                                            |
+| `OFFSITE_PROVIDER`                                                     | S3 only: `Cloudflare`, `Backblaze`, `AWS`, `Wasabi` or `Other`                                                                    |
+| `OFFSITE_ENDPOINT`, `OFFSITE_REGION`                                   | S3 only, from your storage provider (leave the endpoint empty for AWS)                                                            |
+| `OFFSITE_ACCESS_KEY`, `OFFSITE_SECRET_KEY`                             | S3 only, an access key limited to one bucket                                                                                      |
+| `OFFSITE_PATH`                                                         | Bucket and folder, for example `talent-trail-backups/prod` (for SFTP, the folder on the server)                                   |
+| `OFFSITE_RETENTION_DAYS`                                               | Remote copies older than this are deleted (default 30)                                                                            |
+| `OFFSITE_ENCRYPTION_PASSPHRASE`                                        | Optional. Encrypts file contents before upload. Keep this passphrase somewhere safe: without it the remote copies cannot be read. |
+| `OFFSITE_SFTP_HOST`, `OFFSITE_SFTP_USER`, `OFFSITE_SFTP_PASS_OBSCURED` | SFTP only. Get the obscured password with `docker compose run --rm --entrypoint rclone backup obscure 'your-password'`            |
 
 The backups contain employee and payroll data, so set an encryption passphrase before enabling off-server copies. If the upload fails, the backup run is reported as failed and the heartbeat is not sent, so Uptime Kuma alerts you.
 

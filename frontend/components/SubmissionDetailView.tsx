@@ -6,6 +6,7 @@ import { useAuth } from "@/components/AuthProvider";
 import SubmissionFeedback from "@/components/SubmissionFeedback";
 import SubmissionPlacement from "@/components/SubmissionPlacement";
 import SubmissionInterviews from "@/components/SubmissionInterviews";
+import Timeline from "@/components/Timeline";
 import { ErrorBanner, Loading } from "@/components/ui";
 import { api } from "@/lib/api";
 import { formatDate, t, tx } from "@/lib/messages";
@@ -137,6 +138,9 @@ export default function SubmissionDetailView({ id }: { id: string }) {
       </div>
       <SubmissionInterviews submission={submission} canManage={canManage} onChanged={() => void load()} />
       <SubmissionFeedback submission={submission} canManage={canManage} onChanged={setSubmission} />
+      <div className="mt-4">
+        <Timeline subject="SUBMISSION" id={submission.id} refreshKey={submission.status} />
+      </div>
     </section>
   );
 }

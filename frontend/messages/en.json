@@ -482,7 +482,8 @@
     "tabJobs": "Jobs",
     "downloadResume": "Download",
     "noResume": "No resume uploaded yet.",
-    "resumeHint": "PDF, DOC or DOCX up to 10 MB. Every download is recorded in the audit log."
+    "resumeHint": "PDF, DOC or DOCX up to 10 MB. Every download is recorded in the audit log.",
+    "tabHistory": "History"
   },
   "consent": {
     "current": "Current consent",
@@ -901,7 +902,14 @@
     "candidateEmail": "Email to candidate",
     "candidateEmailHelp": "The candidate replies to this email to confirm. Replies come to the person who sent it. When they confirm, click Offer accepted.",
     "sendEmail": "Send congratulation email",
-    "sendAgain": "Send again"
+    "sendAgain": "Send again",
+    "exitFilter": "Exit and replacement",
+    "exitAll": "Any exit state",
+    "exited": "Left the client",
+    "replacementsOnly": "Free replacements",
+    "leftOn": "Left on {date}",
+    "replacedBy": "Replaced by {name}",
+    "replacementFor": "Free replacement for {name}"
   },
   "invoices": {
     "pageHeading": "Invoices",
@@ -2011,6 +2019,55 @@
       "services": "Services",
       "industries": "Industries",
       "copyright": "© {year} Talent Trail HR Solutions. All rights reserved."
+    }
+  },
+  "timeline": {
+    "title": "History",
+    "by": "by",
+    "failed": "Failed",
+    "showAll": "Show all {count} events",
+    "showLess": "Show fewer",
+    "actions": {
+      "CANDIDATE_CREATED": "Candidate added",
+      "CANDIDATE_UPDATED": "Candidate updated",
+      "CANDIDATE_STATUS_CHANGED": "Candidate status changed",
+      "CANDIDATE_CONSENT_RECORDED": "Consent recorded",
+      "CANDIDATE_RESUME_UPLOADED": "Resume uploaded",
+      "CANDIDATE_LINKED_TO_JOB": "Linked to a job",
+      "CANDIDATE_UNLINKED_FROM_JOB": "Removed from a job",
+      "PUBLIC_APPLICATION": "Applied online",
+      "SUBMISSION_CREATED": "Submitted to client",
+      "SUBMISSION_EMAIL_SENT": "Submission email sent",
+      "SUBMISSION_EMAIL_FAILED": "Submission email failed",
+      "SUBMISSION_WITHDRAWN": "Submission withdrawn",
+      "SUBMISSION_STATUS_CHANGED": "Submission status changed",
+      "FEEDBACK_RECORDED": "Client feedback recorded",
+      "INTERVIEW_SCHEDULED": "Interview scheduled",
+      "INTERVIEW_UPDATED": "Interview updated",
+      "INTERVIEW_STATUS_CHANGED": "Interview status changed",
+      "OFFER_RECORDED": "Offer recorded",
+      "OFFER_UPDATED": "Offer updated",
+      "OFFER_EMAIL": "Offer email",
+      "OFFER_ACCEPTED": "Offer accepted",
+      "OFFER_DECLINED": "Offer declined",
+      "JOINING_RECORDED": "Joining recorded",
+      "NOT_JOINED_RECORDED": "Marked as not joined",
+      "JOINING_EMAIL_UPLOADED": "Joining proof uploaded",
+      "EXIT_RECORDED": "Exit recorded",
+      "REPLACEMENT_LINKED": "Replacement linked",
+      "REPLACEMENT_CLOSED": "Replacement closed",
+      "INVOICE_CREATED": "Invoice raised",
+      "INVOICE_SENT": "Invoice sent",
+      "INVOICE_SEND_FAILED": "Invoice email failed",
+      "INVOICE_CANCELLED": "Invoice cancelled",
+      "PAYMENT_RECORDED": "Payment recorded",
+      "PAYMENT_REMOVED": "Payment removed",
+      "COMMISSION_CREATED": "Commission created",
+      "COMMISSION_AMOUNT_SET": "Commission amount set",
+      "COMMISSION_PAID": "Commission paid",
+      "COMMISSION_CANCELLED": "Commission cancelled",
+      "PAYROLL_GENERATED": "Payroll calculated",
+      "PAYROLL_FINALIZED": "Payroll finalized"
     }
   }
 }

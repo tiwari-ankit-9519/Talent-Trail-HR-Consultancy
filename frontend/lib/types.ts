@@ -118,6 +118,16 @@ export type AuditRow = {
   requestId: string | null;
 };
 
+export type TimelineEvent = {
+  id: string;
+  occurredAt: string;
+  action: string;
+  entityType: string | null;
+  summary: string;
+  actorEmail: string | null;
+  outcome: "SUCCESS" | "FAILURE";
+};
+
 export type JobStatus = "DRAFT" | "OPEN" | "ON_HOLD" | "CLOSED";
 
 export type JobSummary = {
@@ -348,6 +358,8 @@ export type PlacementSummary = {
   expectedJoiningDate: string;
   joiningDate: string | null;
   joiningEmailAttached: boolean;
+  exit?: { status: ReplacementStatus; exitDate: string; replacedByName: string | null } | null;
+  replacementOf?: { candidateName: string | null; exitDate: string } | null;
 };
 
 export type PlacementDetail = {

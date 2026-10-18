@@ -12,11 +12,16 @@ import com.abchr.platform.client.ClientRepository;
 import com.abchr.platform.job.Job;
 import com.abchr.platform.job.JobRepository;
 import com.abchr.platform.placement.PlacementDtos.AcceptRequest;
+import com.abchr.platform.placement.PlacementDtos.ExitInfo;
 import com.abchr.platform.placement.PlacementDtos.JoinedRequest;
 import com.abchr.platform.placement.PlacementDtos.OfferRequest;
 import com.abchr.platform.placement.PlacementDtos.PlacementDetail;
 import com.abchr.platform.placement.PlacementDtos.PlacementSummary;
 import com.abchr.platform.placement.PlacementDtos.ReasonRequest;
+import com.abchr.platform.placement.PlacementDtos.ReplacementOf;
+import com.abchr.platform.replacement.Replacement;
+import com.abchr.platform.replacement.ReplacementRepository;
+import com.abchr.platform.replacement.ReplacementStatus;
 import com.abchr.platform.shared.mail.EmailStatus;
 import com.abchr.platform.shared.persistence.VersionCheck;
 import com.abchr.platform.shared.web.ApiException;
@@ -26,13 +31,20 @@ import com.abchr.platform.shared.web.Paging;
 import com.abchr.platform.submission.Submission;
 import com.abchr.platform.submission.SubmissionRepository;
 import com.abchr.platform.submission.SubmissionStatus;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -62,6 +74,7 @@ public class PlacementService {
     private final JoiningEmailStorage storage;
     private final AuditService auditService;
     private final CommissionService commissionService;
+    private final ReplacementRepository replacementRepository;
     private final ZoneId zone;
 
     public PlacementService(
@@ -73,6 +86,7 @@ public class PlacementService {
             JoiningEmailStorage storage,
             AuditService auditService,
             CommissionService commissionService,
+            ReplacementRepository replacementRepository,
             @Value("${app.timezone:Asia/Kolkata}") String zoneId) {
         this.placementRepository = placementRepository;
         this.submissionRepository = submissionRepository;
@@ -82,13 +96,14 @@ public class PlacementService {
         this.storage = storage;
         this.auditService = auditService;
         this.commissionService = commissionService;
+        this.replacementRepository = replacementRepository;
         this.zone = ZoneId.of(zoneId);
     }
 
     @Transactional(readOnly = true)
     public PageResponse<PlacementSummary> search(
-            PlacementStatus status, UUID submissionId, UUID jobId, UUID clientId, UUID candidateId, int page,
-            int size) {
+            PlacementStatus status, UUID submissionId, UUID jobId, UUID clientId, UUID candidateId, ExitFilter exit,
+            int page, int size) {
         Specification<Placement> spec = (root, q, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (status != null) {
@@ -106,6 +121,9 @@ public class PlacementService {
             if (candidateId != null) {
                 predicates.add(cb.equal(root.get("candidateId"), candidateId));
             }
+            if (exit != null) {
+                predicates.add(exitPredicate(exit, root, q, cb));
+            }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
         Page<Placement> result = placementRepository.findAll(spec,
@@ -114,18 +132,61 @@ public class PlacementService {
                 result.getContent().stream().map(Placement::getJobId).distinct().toList()), Job::getId);
         Map<UUID, Client> clients = byId(clientRepository.findAllById(
                 result.getContent().stream().map(Placement::getClientId).distinct().toList()), Client::getId);
-        Map<UUID, Candidate> candidates = byId(candidateRepository.findAllById(
-                result.getContent().stream().map(Placement::getCandidateId).distinct().toList()), Candidate::getId);
+        List<UUID> pageIds = result.getContent().stream().map(Placement::getId).toList();
+        Map<UUID, Replacement> exits = byId(replacementRepository.findByPlacementIdIn(pageIds),
+                Replacement::getPlacementId);
+        Map<UUID, Replacement> replacementsOf = byId(replacementRepository.findByReplacementPlacementIdIn(pageIds),
+                Replacement::getReplacementPlacementId);
+        Map<UUID, Placement> replacedBy = byId(placementRepository.findAllById(exits.values().stream()
+                .map(Replacement::getReplacementPlacementId).filter(Objects::nonNull).distinct().toList()),
+                Placement::getId);
+        Set<UUID> candidateIds = new HashSet<>();
+        result.getContent().forEach(p -> candidateIds.add(p.getCandidateId()));
+        replacedBy.values().forEach(p -> candidateIds.add(p.getCandidateId()));
+        replacementsOf.values().forEach(r -> candidateIds.add(r.getCandidateId()));
+        Map<UUID, Candidate> candidates = byId(candidateRepository.findAllById(candidateIds), Candidate::getId);
         return PageResponse.of(result, p -> {
             Job job = jobs.get(p.getJobId());
             Client client = clients.get(p.getClientId());
             Candidate candidate = candidates.get(p.getCandidateId());
+            Replacement exitRow = exits.get(p.getId());
+            ExitInfo exitInfo = null;
+            if (exitRow != null) {
+                Placement next = exitRow.getReplacementPlacementId() == null
+                        ? null : replacedBy.get(exitRow.getReplacementPlacementId());
+                Candidate nextCandidate = next == null ? null : candidates.get(next.getCandidateId());
+                exitInfo = new ExitInfo(exitRow.getStatus(), exitRow.getExitDate(),
+                        nextCandidate == null ? null : nextCandidate.getFullName());
+            }
+            Replacement original = replacementsOf.get(p.getId());
+            ReplacementOf replacementOf = null;
+            if (original != null) {
+                Candidate left = candidates.get(original.getCandidateId());
+                replacementOf = new ReplacementOf(left == null ? null : left.getFullName(), original.getExitDate());
+            }
             return new PlacementSummary(p.getId(), p.getSubmissionId(), p.getJobId(),
                     job == null ? null : job.getCode(), job == null ? null : job.getTitle(), p.getClientId(),
                     client == null ? null : client.getName(), p.getCandidateId(),
                     candidate == null ? null : candidate.getFullName(), p.getStatus(), p.getOfferedCtc(),
-                    p.getExpectedJoiningDate(), p.getJoiningDate(), p.hasJoiningEmail());
+                    p.getExpectedJoiningDate(), p.getJoiningDate(), p.hasJoiningEmail(), exitInfo, replacementOf);
         });
+    }
+
+    private Predicate exitPredicate(ExitFilter exit, Root<Placement> root, CriteriaQuery<?> query,
+            CriteriaBuilder cb) {
+        Subquery<Long> sub = query.subquery(Long.class);
+        Root<Replacement> replacement = sub.from(Replacement.class);
+        List<Predicate> conditions = new ArrayList<>();
+        if (exit == ExitFilter.REPLACEMENTS) {
+            conditions.add(cb.equal(replacement.get("replacementPlacementId"), root.get("id")));
+        } else {
+            conditions.add(cb.equal(replacement.get("placementId"), root.get("id")));
+            if (exit != ExitFilter.EXITED) {
+                conditions.add(cb.equal(replacement.get("status"), ReplacementStatus.valueOf(exit.name())));
+            }
+        }
+        sub.select(cb.literal(1L)).where(conditions.toArray(new Predicate[0]));
+        return cb.exists(sub);
     }
 
     @Transactional(readOnly = true)

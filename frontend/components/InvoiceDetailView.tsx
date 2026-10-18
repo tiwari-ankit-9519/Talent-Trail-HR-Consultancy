@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import InvoicePayments from "@/components/InvoicePayments";
+import Timeline from "@/components/Timeline";
 import { ErrorBanner, Field, Loading } from "@/components/ui";
 import { api, apiBlob } from "@/lib/api";
 import { formatDate, formatDay, formatMoney, t, tx } from "@/lib/messages";
@@ -329,6 +330,9 @@ export default function InvoiceDetailView({ id }: { id: string }) {
       </div>
 
       <InvoicePayments invoice={invoice} canManage={canManage} onChanged={setInvoice} />
+      <div className="mt-4">
+        <Timeline subject="INVOICE" id={invoice.id} refreshKey={`${invoice.status}-${invoice.balance}`} />
+      </div>
     </section>
   );
 }

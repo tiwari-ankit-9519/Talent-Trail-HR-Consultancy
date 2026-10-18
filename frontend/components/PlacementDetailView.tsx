@@ -17,6 +17,7 @@ import { Badge, badgeVariants } from "@/components/shadcn/badge";
 import { Card } from "@/components/shadcn/card";
 import { useBreadcrumbLabel } from "@/lib/breadcrumb";
 import StatusPill from "@/components/StatusPill";
+import Timeline from "@/components/Timeline";
 import { usePolling } from "@/lib/usePolling";
 import { DateField } from "@/components/shadcn/date-picker";
 
@@ -353,6 +354,9 @@ export default function PlacementDetailView({ id }: { id: string }) {
         {placement.status === "JOINED" && <PlacementCommission placementId={placement.id} />}
 
         <PlacementExit placementId={placement.id} status={placement.status} />
+      </div>
+      <div className="mt-4">
+        <Timeline subject="PLACEMENT" id={placement.id} refreshKey={placement.version} />
       </div>
     </section>
   );

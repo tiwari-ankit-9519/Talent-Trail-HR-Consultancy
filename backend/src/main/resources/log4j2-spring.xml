@@ -5,12 +5,20 @@
         <Property name="SERVICE_NAME">${spring:app.logging.service-name:-abc-hr-platform}</Property>
         <Property name="ENVIRONMENT">${spring:app.logging.environment:-local}</Property>
         <Property name="LOG_FILE">${sys:LOG_FILE:-logs/platform.log}</Property>
+        <Property name="EVENTS_FILE">${spring:app.logging.events-file:-logs/events.log}</Property>
+        <Property name="EVENT_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSSXXX} [requestId=%X{requestId}] %msg%n</Property>
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSSXXX} %-5level [%t] [service=${SERVICE_NAME}] [env=${ENVIRONMENT}] [requestId=%X{requestId}] [user=%X{userEmail}] [method=%X{httpMethod}] [path=%X{httpPath}] %logger{36} - %msg%n%throwable</Property>
     </Properties>
 
     <Appenders>
 
         <Console name="Console" target="SYSTEM_OUT">
+            <Filters>
+                <ThreadContextMapFilter onMatch="NEUTRAL" onMismatch="ACCEPT">
+                    <KeyValuePair key="quiet" value="true"/>
+                </ThreadContextMapFilter>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
 
@@ -18,6 +26,13 @@
                 name="RollingFile"
                 fileName="${LOG_FILE}"
                 filePattern="${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz">
+
+            <Filters>
+                <ThreadContextMapFilter onMatch="NEUTRAL" onMismatch="ACCEPT">
+                    <KeyValuePair key="quiet" value="true"/>
+                </ThreadContextMapFilter>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
 
             <PatternLayout pattern="${LOG_PATTERN}"/>
 
@@ -29,6 +44,18 @@
             <DefaultRolloverStrategy max="30"/>
         </RollingFile>
 
+        <RollingFile
+                name="EventsFile"
+                fileName="${EVENTS_FILE}"
+                filePattern="${EVENTS_FILE}.%d{yyyy-MM-dd}.%i.gz">
+            <PatternLayout pattern="${EVENT_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="90"/>
+        </RollingFile>
+
     </Appenders>
 
     <Loggers>
@@ -37,6 +64,10 @@
         <Logger name="org.hibernate" level="WARN"/>
         <Logger name="org.flywaydb" level="INFO"/>
         <Logger name="com.zaxxer.hikari" level="INFO"/>
+
+        <Logger name="event" level="INFO" additivity="true">
+            <AppenderRef ref="EventsFile"/>
+        </Logger>
 
         <Root level="INFO">
             <AppenderRef ref="Console"/>

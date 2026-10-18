@@ -4,16 +4,19 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Empty, ErrorBanner, Loading, Pager } from "@/components/ui";
 import { api } from "@/lib/api";
+import { Badge } from "@/components/shadcn/badge";
 import { formatDay, formatMoney, t, tx } from "@/lib/messages";
 import type { Page, PlacementStatus, PlacementSummary } from "@/lib/types";
 import { FormSelect } from "@/components/shadcn/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/shadcn/table";
 import StatusPill from "@/components/StatusPill";
 
+const exitFilters = ["EXITED", "OPEN", "FILLED", "CLOSED", "NOT_ELIGIBLE", "REPLACEMENTS"] as const;
 const statuses: PlacementStatus[] = ["OFFERED", "OFFER_ACCEPTED", "JOINED", "OFFER_DECLINED", "NOT_JOINED"];
 
 export default function PlacementsView() {
   const [status, setStatus] = useState("");
+  const [exit, setExit] = useState("");
   const [page, setPage] = useState(0);
   const [result, setResult] = useState<Page<PlacementSummary> | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -22,12 +25,14 @@ export default function PlacementsView() {
     try {
       setError(null);
       setResult(
-        await api<Page<PlacementSummary>>("/placements", { query: { status: status || undefined, page, size: 20 } }),
+        await api<Page<PlacementSummary>>("/placements", {
+          query: { status: status || undefined, exit: exit || undefined, page, size: 20 },
+        }),
       );
     } catch (failure) {
       setError(failure);
     }
-  }, [status, page]);
+  }, [status, exit, page]);
 
   useEffect(() => {
     void load();
@@ -49,6 +54,25 @@ export default function PlacementsView() {
           {statuses.map((value) => (
             <option key={value} value={value}>
               {tx(`enums.placementStatus.${value}`)}
+            </option>
+          ))}
+        </FormSelect>
+        <FormSelect
+          value={exit}
+          aria-label={t("placements.exitFilter")}
+          onChange={(e) => {
+            setPage(0);
+            setExit(e.target.value);
+          }}
+        >
+          <option value="">{t("placements.exitAll")}</option>
+          {exitFilters.map((value) => (
+            <option key={value} value={value}>
+              {value === "EXITED"
+                ? t("placements.exited")
+                : value === "REPLACEMENTS"
+                  ? t("placements.replacementsOnly")
+                  : tx(`enums.replacementStatus.${value}`)}
             </option>
           ))}
         </FormSelect>
@@ -85,7 +109,23 @@ export default function PlacementsView() {
                   <TableCell>{formatDay(row.expectedJoiningDate)}</TableCell>
                   <TableCell>{formatDay(row.joiningDate)}</TableCell>
                   <TableCell>
-                    <StatusPill kind="placementStatus" value={row.status} />
+                    <div className="flex min-w-60 flex-wrap items-center gap-1.5">
+                      <StatusPill kind="placementStatus" value={row.status} />
+                      {row.exit && <StatusPill kind="replacementStatus" value={row.exit.status} />}
+                      {row.replacementOf && (
+                        <Badge variant="accent">
+                          {t("placements.replacementFor").replace("{name}", row.replacementOf.candidateName ?? "")}
+                        </Badge>
+                      )}
+                    </div>
+                    {row.exit && (
+                      <div className="muted mt-1 min-w-60 text-xs">
+                        {t("placements.leftOn").replace("{date}", formatDay(row.exit.exitDate))}
+                        {row.exit.replacedByName
+                          ? `. ${t("placements.replacedBy").replace("{name}", row.exit.replacedByName)}`
+                          : ""}
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell>
                     {row.status === "JOINED"

@@ -98,6 +98,7 @@ app:
   logging:
     service-name: ${SERVICE_NAME:abc-hr-platform}
     environment: ${APP_ENV:local}
+    events-file: ${LOG_DIR:logs}/events.log
     http-bodies-enabled: ${HTTP_BODIES_ENABLED:false}
     slow-request-ms: ${SLOW_REQUEST_MS:1000}
     sql:

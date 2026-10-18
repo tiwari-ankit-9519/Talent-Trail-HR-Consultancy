@@ -52,9 +52,10 @@ public class PlacementController {
             @RequestParam(required = false) UUID jobId,
             @RequestParam(required = false) UUID clientId,
             @RequestParam(required = false) UUID candidateId,
+            @RequestParam(required = false) ExitFilter exit,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return placementService.search(status, submissionId, jobId, clientId, candidateId, page, size);
+        return placementService.search(status, submissionId, jobId, clientId, candidateId, exit, page, size);
     }
 
     @GetMapping("/placements/{id}")

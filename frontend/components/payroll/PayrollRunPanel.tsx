@@ -3,6 +3,7 @@
 import { Calculator, Lock } from "lucide-react";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import PayslipDialog from "@/components/payroll/PayslipDialog";
+import Timeline from "@/components/Timeline";
 import { Badge } from "@/components/shadcn/badge";
 import { Button } from "@/components/shadcn/button";
 import { Card } from "@/components/shadcn/card";
@@ -218,6 +219,7 @@ export default function PayrollRunPanel() {
               </TableBody>
             </Table>
           </div>
+          <Timeline subject="PAYROLL_RUN" id={run.id} refreshKey={`${run.status}-${run.employees}-${run.totalGross}`} />
         </>
       )}
 
