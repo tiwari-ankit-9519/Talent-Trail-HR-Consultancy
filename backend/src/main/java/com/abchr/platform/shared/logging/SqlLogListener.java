@@ -13,6 +13,7 @@ public class SqlLogListener implements QueryExecutionListener {
 
     private static final Logger SQL = LogManager.getLogger("sql");
     private static final Pattern SKIP = Pattern.compile("(?i)flyway_schema_history");
+    private static final Pattern POLL = Pattern.compile("(?i)from outbox_event where status = 'PENDING'.*for update skip locked");
     private static final Pattern SENSITIVE =
             Pattern.compile("(?i)\\b(password\\w*|\\w*token\\w*|secret\\w*|\\w*hash|bank_\\w+|pan|uan|\\w*_enc)\\b");
     private static final int MAX_ROWS = 3;
@@ -36,6 +37,9 @@ public class SqlLogListener implements QueryExecutionListener {
         for (QueryInfo query : queries) {
             String text = query.getQuery() == null ? "" : query.getQuery().replaceAll("\\s+", " ").trim();
             if (SKIP.matcher(text).find()) {
+                continue;
+            }
+            if (info.isSuccess() && millis < slowMs && POLL.matcher(text).find()) {
                 continue;
             }
             SqlStats.record(millis);

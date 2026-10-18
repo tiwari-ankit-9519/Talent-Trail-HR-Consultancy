@@ -45,6 +45,7 @@ class TimelineIT extends IntegrationTestBase {
         assertEquals(201, user.status(), user.body());
         String staff = loginReady(email, "Staff-Passw0rd!x", "Staff-Passw0rd!y");
         assertEquals(403, get("/api/v1/timeline/PLACEMENT/" + UUID.randomUUID(), staff).status());
-        assertEquals(403, get("/api/v1/timeline/PAYROLL_RUN/" + UUID.randomUUID(), staff).status());
+        assertEquals(403, get("/api/v1/timeline/INVOICE/" + UUID.randomUUID(), staff).status());
+        assertEquals(404, get("/api/v1/timeline/PAYROLL_RUN/" + UUID.randomUUID(), staff).status());
     }
 }

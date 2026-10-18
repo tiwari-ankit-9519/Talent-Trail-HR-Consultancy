@@ -86,17 +86,17 @@ Set `OFFSITE_ENABLED=false` (or remove it) and recreate the service to turn it o
 
 Settings:
 
-| Variable                                                               | Meaning                                                                                                                           |
-| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `OFFSITE_ENABLED`                                                      | `true` to upload, `false` to skip                                                                                                 |
-| `OFFSITE_TYPE`                                                         | `s3` (default, works for AWS S3, Cloudflare R2, Backblaze B2, Wasabi, MinIO) or `sftp`                                            |
-| `OFFSITE_PROVIDER`                                                     | S3 only: `Cloudflare`, `Backblaze`, `AWS`, `Wasabi` or `Other`                                                                    |
-| `OFFSITE_ENDPOINT`, `OFFSITE_REGION`                                   | S3 only, from your storage provider (leave the endpoint empty for AWS)                                                            |
-| `OFFSITE_ACCESS_KEY`, `OFFSITE_SECRET_KEY`                             | S3 only, an access key limited to one bucket                                                                                      |
-| `OFFSITE_PATH`                                                         | Bucket and folder, for example `talent-trail-backups/prod` (for SFTP, the folder on the server)                                   |
-| `OFFSITE_RETENTION_DAYS`                                               | Remote copies older than this are deleted (default 30)                                                                            |
-| `OFFSITE_ENCRYPTION_PASSPHRASE`                                        | Optional. Encrypts file contents before upload. Keep this passphrase somewhere safe: without it the remote copies cannot be read. |
-| `OFFSITE_SFTP_HOST`, `OFFSITE_SFTP_USER`, `OFFSITE_SFTP_PASS_OBSCURED` | SFTP only. Get the obscured password with `docker compose run --rm --entrypoint rclone backup obscure 'your-password'`            |
+| Variable | Meaning |
+| --- | --- |
+| `OFFSITE_ENABLED` | `true` to upload, `false` to skip |
+| `OFFSITE_TYPE` | `s3` (default, works for AWS S3, Cloudflare R2, Backblaze B2, Wasabi, MinIO) or `sftp` |
+| `OFFSITE_PROVIDER` | S3 only: `Cloudflare`, `Backblaze`, `AWS`, `Wasabi` or `Other` |
+| `OFFSITE_ENDPOINT`, `OFFSITE_REGION` | S3 only, from your storage provider (leave the endpoint empty for AWS) |
+| `OFFSITE_ACCESS_KEY`, `OFFSITE_SECRET_KEY` | S3 only, an access key limited to one bucket |
+| `OFFSITE_PATH` | Bucket and folder, for example `talent-trail-backups/prod` (for SFTP, the folder on the server) |
+| `OFFSITE_RETENTION_DAYS` | Remote copies older than this are deleted (default 30) |
+| `OFFSITE_ENCRYPTION_PASSPHRASE` | Optional. Encrypts file contents before upload. Keep this passphrase somewhere safe: without it the remote copies cannot be read. |
+| `OFFSITE_SFTP_HOST`, `OFFSITE_SFTP_USER`, `OFFSITE_SFTP_PASS_OBSCURED` | SFTP only. Get the obscured password with `docker compose run --rm --entrypoint rclone backup obscure 'your-password'` |
 
 The backups contain employee and payroll data, so set an encryption passphrase before enabling off-server copies. If the upload fails, the backup run is reported as failed and the heartbeat is not sent, so Uptime Kuma alerts you.
 
@@ -131,12 +131,18 @@ Admins edit email wording under Administration, Emails and reminders. Templates 
 
 Automatic reminders run daily at 9 AM in `APP_TIMEZONE` and are all off until enabled. Each reminder is sent once per listed day count; if the server was down, a missed day is caught up for up to two days. Set `REMINDERS_CRON` only to change the schedule (Spring cron format). Reminders need `MAIL_HOST` to be configured, otherwise nothing is sent.
 
+## Production deployment
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for the free Oracle Cloud VM walkthrough. In short: `sh ops/init-env.sh <domain> <admin-email>` creates a production `.env` with random secrets, `sh ops/check-env.sh` validates it, and `./ops/deploy.sh` builds, starts and smoke-tests. `./ops/rollback.sh` returns to the last good commit. CI runs on every push (`.github/workflows/ci.yml`); `deploy.yml` is a manual deploy over SSH.
+
 ## Layout
 
 ```
 backend/    Spring Boot application (com.abchr.platform)
 frontend/   Next.js application
-ops/        Caddyfile and backup script
+ops/        Caddyfile, backup, env generator/checker, deploy and rollback scripts
+docs/       Deployment guide
+.github/    CI, manual deploy workflow, Dependabot
 ```
 
 Backend packages are one per business module. `shared` holds configuration, the transactional outbox, request tracing and error handling.

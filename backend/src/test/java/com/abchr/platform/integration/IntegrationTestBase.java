@@ -18,7 +18,7 @@ import org.testcontainers.rabbitmq.RabbitMQContainer;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "app.auth.rate-limit-attempts=1000")
 abstract class IntegrationTestBase {
 
     static final String ADMIN_EMAIL = "admin@talenttrail.test";

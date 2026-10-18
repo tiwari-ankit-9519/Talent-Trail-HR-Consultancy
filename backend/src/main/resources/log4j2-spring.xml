@@ -2,7 +2,7 @@
 <Configuration status="WARN">
 
     <Properties>
-        <Property name="SERVICE_NAME">${spring:app.logging.service-name:-abc-hr-platform}</Property>
+        <Property name="SERVICE_NAME">${spring:app.logging.service-name:-talent-trail-hr-platform}</Property>
         <Property name="ENVIRONMENT">${spring:app.logging.environment:-local}</Property>
         <Property name="LOG_FILE">${sys:LOG_FILE:-logs/platform.log}</Property>
         <Property name="EVENTS_FILE">${spring:app.logging.events-file:-logs/events.log}</Property>

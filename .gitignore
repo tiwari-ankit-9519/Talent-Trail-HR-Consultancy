@@ -6,3 +6,7 @@ target/
 node_modules/
 .next/
 backups/
+.env.production
+.last-good
+docker-compose.local.yml
+.idea

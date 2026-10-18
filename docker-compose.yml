@@ -1,4 +1,10 @@
-name: ${COMPOSE_PROJECT_NAME:-Talent Trail HR Consultancy}
+name: ${COMPOSE_PROJECT_NAME:-abc-hr}
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
 
 x-backup-base: &backup-base
   build:
@@ -25,6 +31,7 @@ x-backup-base: &backup-base
     RCLONE_CONFIG_OFFSITE_HOST: ${OFFSITE_SFTP_HOST:-}
     RCLONE_CONFIG_OFFSITE_USER: ${OFFSITE_SFTP_USER:-}
     RCLONE_CONFIG_OFFSITE_PASS: ${OFFSITE_SFTP_PASS_OBSCURED:-}
+  logging: *default-logging
   networks:
     - internal
 
@@ -32,6 +39,7 @@ services:
   postgres:
     image: postgres:17-alpine
     restart: unless-stopped
+    logging: *default-logging
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -49,6 +57,7 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
+    logging: *default-logging
     command: ["sh", "-c", "exec redis-server --requirepass \"$$REDIS_PASSWORD\" --appendonly yes"]
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
@@ -65,6 +74,7 @@ services:
   rabbitmq:
     image: rabbitmq:4-alpine
     restart: unless-stopped
+    logging: *default-logging
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
@@ -88,6 +98,7 @@ services:
     build:
       context: ./backend
     restart: unless-stopped
+    logging: *default-logging
     env_file:
       - .env
     environment:
@@ -121,6 +132,7 @@ services:
       args:
         NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-/api}
     restart: unless-stopped
+    logging: *default-logging
     depends_on:
       backend:
         condition: service_healthy
@@ -132,6 +144,7 @@ services:
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
+    logging: *default-logging
     environment:
       DOMAIN: ${DOMAIN}
     ports:
@@ -150,6 +163,7 @@ services:
   backup:
     <<: *backup-base
     restart: unless-stopped
+    logging: *default-logging
     entrypoint: ["sh", "/ops/backup.sh"]
     volumes:
       - ./ops:/ops:ro
@@ -172,6 +186,7 @@ services:
     image: louislam/uptime-kuma:1
     profiles: ["monitoring"]
     restart: unless-stopped
+    logging: *default-logging
     ports:
       - "127.0.0.1:${UPTIME_PORT:-3001}:3001"
     volumes:

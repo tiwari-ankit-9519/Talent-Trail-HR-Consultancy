@@ -873,31 +873,10 @@ body:has(.login-shell) .floating-theme {
   opacity: 0;
   transform: translateY(22px);
 }
-.art-float {
-  animation: art-float 6.5s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: center;
+.float-y {
+  animation: float-y 6.5s ease-in-out infinite;
 }
-.art-float-slow {
-  animation-duration: 8.5s;
-}
-.art-dash {
-  animation: art-dash 2.4s linear infinite;
-}
-.art-twinkle {
-  animation: art-twinkle 3.2s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.art-spin {
-  animation: art-spin 24s linear infinite;
-  transform-box: view-box;
-  transform-origin: 196px 206px;
-}
-.art-drop {
-  animation: art-drop 3.2s ease-in infinite;
-}
-@keyframes art-float {
+@keyframes float-y {
   0%,
   100% {
     transform: translateY(0);
@@ -906,50 +885,8 @@ body:has(.login-shell) .floating-theme {
     transform: translateY(-9px);
   }
 }
-@keyframes art-dash {
-  to {
-    stroke-dashoffset: -26;
-  }
-}
-@keyframes art-twinkle {
-  0%,
-  100% {
-    opacity: 0.25;
-    transform: scale(0.7);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-}
-@keyframes art-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes art-drop {
-  0% {
-    transform: translateY(-14px);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  70% {
-    transform: translateY(78px);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100px);
-    opacity: 0;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  .art-float,
-  .art-dash,
-  .art-twinkle,
-  .art-spin,
-  .art-drop,
+  .float-y,
   .reveal {
     animation: none;
     transition: none;

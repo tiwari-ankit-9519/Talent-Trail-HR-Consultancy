@@ -2019,6 +2019,20 @@
       "services": "Services",
       "industries": "Industries",
       "copyright": "© {year} Talent Trail HR Solutions. All rights reserved."
+    },
+    "images": {
+      "teamWide": "A team of colleagues talking around a table in a bright open office",
+      "teamCenter": "Two colleagues smiling as one explains something at a laptop",
+      "teamLeft": "A colleague listening while another holds a tablet in the office",
+      "man": "A smiling professional with his arms folded",
+      "teamRight": "Three colleagues smiling and working together at a table",
+      "bannerTalent": "Transforming talent acquisition. Innovating and optimizing recruitment processes to build agile, top-tier teams that drive sustainable business growth while significantly reducing overhead costs.",
+      "bannerTeams": "Building world-class teams. We connect top talent with global companies, ensuring long-term success, mutual growth, and professional excellence.",
+      "bannerResources": "On-demand resources. Adapt to changing business needs with flexible, skilled professionals to keep your projects on track without long-term overhead."
+    },
+    "showcase": {
+      "heading": "Hiring support that fits how you work",
+      "lead": "One hire or a full recruiting desk, we adapt to what your team needs."
     }
   },
   "timeline": {

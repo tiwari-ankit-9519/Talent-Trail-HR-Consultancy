@@ -1,7 +1,13 @@
 import { ContactSection, LandingFooter } from "@/components/landing/ContactFooter";
 import HeroSlider from "@/components/landing/HeroSlider";
 import LandingHeader from "@/components/landing/LandingHeader";
-import { AboutSection, IndustriesSection, ProcessSection, ServicesSection } from "@/components/landing/Sections";
+import {
+  AboutSection,
+  ShowcaseSection,
+  IndustriesSection,
+  ProcessSection,
+  ServicesSection,
+} from "@/components/landing/Sections";
 
 export default function LandingView() {
   return (
@@ -9,6 +15,7 @@ export default function LandingView() {
       <LandingHeader />
       <main>
         <HeroSlider />
+        <ShowcaseSection />
         <ServicesSection />
         <AboutSection />
         <IndustriesSection />

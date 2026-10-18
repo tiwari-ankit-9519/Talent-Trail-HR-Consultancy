@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { industries, services } from "@/components/landing/content";
+import Photo from "@/components/landing/Photo";
 import { Button } from "@/components/shadcn/button";
-import { Card } from "@/components/shadcn/card";
 import { site } from "@/lib/site";
 import { t, tx } from "@/lib/messages";
 
@@ -14,32 +14,55 @@ export function ContactSection() {
   ].filter((item) => item.value !== "");
 
   return (
-    <section id="contact" className="scroll-mt-20 py-16">
-      <div className="mx-auto max-w-6xl px-4">
-        <Card className="grid gap-6 p-8 text-center sm:p-12">
-          <h2 className="m-0 text-3xl font-bold tracking-tight">{t("landing.contact.heading")}</h2>
-          <p className="muted mx-auto m-0 max-w-xl">{t("landing.contact.lead")}</p>
+    <section id="contact" className="scroll-mt-20 px-4 py-20">
+      <div className="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2rem] shadow-2xl">
+        <div aria-hidden="true" className="absolute inset-0 -z-20">
+          <Photo name="teamWide" decorative />
+        </div>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-indigo-950/95 via-indigo-900/85 to-indigo-700/30"
+        />
+        <div className="grid max-w-xl gap-6 px-6 py-16 text-white sm:px-14 sm:py-24">
+          <h2 className="m-0 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            {t("landing.contact.heading")}
+          </h2>
+          <p className="m-0 text-lg text-white/80">{t("landing.contact.lead")}</p>
           {details.length > 0 && (
-            <ul className="m-0 flex list-none flex-wrap justify-center gap-x-8 gap-y-3 p-0">
+            <ul className="m-0 flex list-none flex-wrap gap-x-8 gap-y-3 p-0">
               {details.map(({ icon: Icon, value, href }) => (
                 <li key={value} className="flex items-center gap-2">
-                  <Icon aria-hidden="true" className="size-4 text-accent" />
-                  {href ? <a href={href}>{value}</a> : <span>{value}</span>}
+                  <Icon aria-hidden="true" className="size-4 text-white/70" />
+                  {href ? (
+                    <a href={href} className="text-white">
+                      {value}
+                    </a>
+                  ) : (
+                    <span>{value}</span>
+                  )}
                 </li>
               ))}
             </ul>
           )}
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap gap-3">
             {site.email !== "" && (
-              <Button asChild>
+              <Button asChild className="bg-white text-slate-900 hover:bg-white/90">
                 <a href={`mailto:${site.email}`}>{t("landing.contact.hire")}</a>
               </Button>
             )}
-            <Button asChild variant={site.email !== "" ? "outline" : "default"}>
+            <Button
+              asChild
+              variant="outline"
+              className={
+                site.email !== ""
+                  ? "border-white/50 bg-transparent text-white hover:bg-white/15 hover:text-white"
+                  : "border-transparent bg-white text-slate-900 hover:bg-white/90 hover:text-slate-900"
+              }
+            >
               <Link href="/apply">{t("landing.contact.jobs")}</Link>
             </Button>
           </div>
-        </Card>
+        </div>
       </div>
     </section>
   );
