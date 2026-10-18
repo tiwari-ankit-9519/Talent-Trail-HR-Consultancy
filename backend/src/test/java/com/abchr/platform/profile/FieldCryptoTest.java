@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import com.abchr.platform.profile.FieldCrypto;
+
 class FieldCryptoTest {
 
     private static final String KEY = "a-test-key-that-is-longer-than-32-characters";

@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
+import com.abchr.platform.report.BusinessReportService;
+
 class BusinessReportServiceTest {
 
     private final LocalDate today = LocalDate.of(2026, 10, 18);

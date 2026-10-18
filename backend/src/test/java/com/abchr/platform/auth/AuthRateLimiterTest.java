@@ -4,10 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.abchr.platform.shared.web.ApiException;
-import com.abchr.platform.shared.web.ErrorCodes;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+
+import com.abchr.platform.auth.AuthRateLimiter;
+import com.abchr.platform.shared.web.ApiException;
+import com.abchr.platform.shared.web.ErrorCodes;
 
 class AuthRateLimiterTest {
 

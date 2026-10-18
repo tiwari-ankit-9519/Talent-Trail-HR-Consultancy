@@ -4,9 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Test;
+
+import com.abchr.platform.auth.PasswordPolicy;
 import com.abchr.platform.shared.web.ApiException;
 import com.abchr.platform.shared.web.ErrorCodes;
-import org.junit.jupiter.api.Test;
 
 class PasswordPolicyTest {
 

@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
+import com.abchr.platform.attendance.AttendanceCalendar;
+import com.abchr.platform.attendance.LeaveDay;
+
 class AttendanceCalendarTest {
 
     private static final LocalDate SATURDAY = LocalDate.of(2026, 10, 17);

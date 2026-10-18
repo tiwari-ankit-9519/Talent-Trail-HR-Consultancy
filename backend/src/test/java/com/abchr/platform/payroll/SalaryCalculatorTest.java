@@ -3,9 +3,12 @@ package com.abchr.platform.payroll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.abchr.platform.payroll.PayrollDtos.Breakdown;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
+
+import com.abchr.platform.payroll.PayrollSettings;
+import com.abchr.platform.payroll.SalaryCalculator;
+import com.abchr.platform.payroll.PayrollDtos.Breakdown;
 
 class SalaryCalculatorTest {
 

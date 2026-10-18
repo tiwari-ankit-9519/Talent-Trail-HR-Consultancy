@@ -2,9 +2,10 @@ package com.abchr.platform.shared;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.abchr.platform.shared.web.ClientIp;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import com.abchr.platform.shared.web.ClientIp;
 
 class ClientIpTest {
 

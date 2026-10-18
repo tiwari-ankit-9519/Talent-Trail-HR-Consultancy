@@ -10,6 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 
+import com.abchr.platform.reminder.EmailTemplateService;
+import com.abchr.platform.reminder.ReminderService;
+import com.abchr.platform.reminder.TemplateCatalog;
+
 class TemplateCatalogTest {
 
     private static final Pattern PLACEHOLDER = Pattern.compile("\\{\\{\\s*([A-Za-z][A-Za-z0-9]*)\\s*}}");

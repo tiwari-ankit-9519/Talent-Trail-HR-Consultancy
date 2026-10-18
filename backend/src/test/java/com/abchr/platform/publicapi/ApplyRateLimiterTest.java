@@ -3,8 +3,9 @@ package com.abchr.platform.publicapi;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.abchr.platform.shared.web.ApiException;
 import org.junit.jupiter.api.Test;
+
+import com.abchr.platform.shared.web.ApiException;
 
 class ApplyRateLimiterTest {
 
